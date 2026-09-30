@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PLADETUR Santiago 2026–2036</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Public+Sans:ital,wght@0,400..700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: civic planning console — yellow masthead band from the plan's tables, sticky tabs, filter row, cards → drawer detail, Gantt 2026–2036 */
+:root{
+  --bg:#FBFAF6; --surface:#FFFFFF; --sunk:#F2F0E8; --fg:#16202E; --fg2:#465163; --muted:#6E7684;
+  --line:#E3E0D6; --line2:#CFCAB9; --band:#FFC000; --band-ink:#16202E; --accent:#C8102E;
+  --le1:#D0392B; --le2:#2B63B5; --le3:#C98200; --le4:#00957E; --le5:#A0469B;
+  --n-EST:#E3EFD7; --n-GES:#F7DCEB; --n-PRG:#DCE3F4; --n-INV:#FCE0C8; --n-NOR:#FFF0B8; --n-ink:#1d2533;
+  --cell-off:#EEEBE2;
+  --f-display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --shadow:0 12px 40px rgba(22,32,46,.18);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13161B; --surface:#1A1E25; --sunk:#20252D; --fg:#ECEAE3; --fg2:#B9BDC5; --muted:#8C929C;
+  --line:#2C323B; --line2:#3A414C; --band:#E8AE00; --band-ink:#13161B; --accent:#FF5A6E;
+  --n-EST:#2A3A24; --n-GES:#44283A; --n-PRG:#26304A; --n-INV:#4A3322; --n-NOR:#474019; --n-ink:#ECEAE3;
+  --cell-off:#252A32; --shadow:0 12px 40px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13161B; --surface:#1A1E25; --sunk:#20252D; --fg:#ECEAE3; --fg2:#B9BDC5; --muted:#8C929C;
+  --line:#2C323B; --line2:#3A414C; --band:#E8AE00; --band-ink:#13161B; --accent:#FF5A6E;
+  --n-EST:#2A3A24; --n-GES:#44283A; --n-PRG:#26304A; --n-INV:#4A3322; --n-NOR:#474019; --n-ink:#ECEAE3;
+  --cell-off:#252A32; --shadow:0 12px 40px rgba(0,0,0,.5); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.08}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--band);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--f-mono);font-size:.78em;letter-spacing:.02em}
+.eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--muted)}
+
+/* masthead */
+.mast{background:var(--band);color:var(--band-ink)}
+.mast .wrap{padding-block:28px 22px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:end}
+.mast .eyebrow{color:var(--band-ink);opacity:.75}
+.mast h1{font-size:clamp(2.4rem,6vw,4.6rem);font-weight:900;font-stretch:112%;letter-spacing:-.02em;margin-top:8px}
+.mast h1 span{display:block;font-size:.42em;font-weight:700;font-stretch:100%;letter-spacing:0;margin-top:6px}
+.vision{font-size:1rem;line-height:1.5;border-left:4px solid var(--band-ink);padding-left:14px;max-width:62ch}
+.vision b{font-family:var(--f-display);font-stretch:100%;display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.kpis{display:flex;flex-wrap:wrap;gap:0;border-top:2px solid var(--band-ink);margin-top:4px}
+.kpi{padding:10px 18px 4px 0;margin-right:18px}
+.kpi strong{display:block;font-family:var(--f-display);font-size:2rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tab{border:0;background:none;padding:14px 14px 12px;font-family:var(--f-display);font-weight:700;font-size:.95rem;color:var(--fg2);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--fg)}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-block:16px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:.82rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+select,input[type=search]{font:inherit;font-size:.85rem;background:var(--surface);color:var(--fg);border:1px solid var(--line2);border-radius:8px;padding:6px 10px}
+input[type=search]{min-width:0;width:220px}
+.linkbtn{border:0;background:none;color:var(--accent);font-weight:700;font-size:.82rem;cursor:pointer;padding:4px}
+.count{font-size:.85rem;color:var(--muted);padding-block:0 10px}
+.count b{color:var(--fg)}
+
+/* structure */
+.lineblk{margin-block:26px 34px}
+.linehead{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;align-items:start;padding-bottom:14px;border-bottom:2px solid var(--fg)}
+.lecode{font-family:var(--f-display);font-weight:900;font-size:2.6rem;line-height:.9;font-stretch:112%}
+.linehead h2{font-size:1.55rem;font-weight:800}
+.linehead p{margin:4px 0 0;color:var(--fg2);font-style:italic}
+.comp{margin-top:18px}
+.comphead{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin-bottom:10px}
+.comphead h3{font-size:1.02rem;font-weight:700;font-stretch:100%}
+.comphead details{flex-basis:100%;font-size:.86rem;color:var(--fg2)}
+.comphead summary{cursor:pointer;color:var(--muted);font-size:.8rem;font-weight:600}
+.comphead details p{margin:6px 0 0;max-width:90ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 17px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-width:0;transition:border-color .15s,transform .15s}
+.card::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:0 3px 3px 0;background:var(--lc)}
+.card:hover{border-color:var(--line2);transform:translateY(-1px)}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.card h4{margin:0;font-family:var(--f-display);font-size:1.02rem;font-weight:700;line-height:1.2}
+.prio{font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.prio.D{background:var(--fg);color:var(--bg)}
+.prio.P{border:1.5px solid var(--fg);color:var(--fg)}
+.prio.A{border:1.5px dashed var(--fg2);color:var(--fg2)}
+.nats{display:flex;gap:4px;flex-wrap:wrap}
+.nat{font-family:var(--f-mono);font-size:.68rem;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--n-x);color:var(--n-ink)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.75rem;color:var(--muted)}
+.strip{display:grid;grid-template-columns:repeat(11,1fr);gap:2px;width:132px;flex:none}
+.strip i{height:8px;border-radius:2px;background:var(--cell-off)}
+.strip i.on{background:var(--lc)}
+.empty{padding:40px 0;color:var(--muted);text-align:center}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(10,14,20,.45);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--surface);z-index:41;box-shadow:var(--shadow);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.dhead{padding:18px 22px 14px;border-bottom:1px solid var(--line);border-top:6px solid var(--lc)}
+.dhead .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dhead h3{font-size:1.5rem;font-weight:800;margin-top:6px}
+.dhead .sub{color:var(--fg2);font-size:.85rem;margin-top:4px}
+.close{border:1px solid var(--line2);background:var(--surface);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:1.1rem;line-height:1}
+.dbody{overflow-y:auto;padding:18px 22px 30px;display:flex;flex-direction:column;gap:20px}
+.dsec h5{margin:0 0 8px;font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.dsec p{margin:0}
+.obj{font-size:1.02rem;line-height:1.55}
+.acts{display:flex;flex-direction:column;gap:12px}
+.act{display:grid;grid-template-columns:34px minmax(0,1fr);gap:4px 10px}
+.act .n{font-family:var(--f-mono);font-weight:700;font-size:.8rem;padding-top:2px}
+.act .txt{font-size:.9rem}
+.act .yr{grid-column:2;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.yrs{display:grid;grid-template-columns:repeat(11,22px);gap:2px}
+.yrs i{height:12px;border-radius:2px;background:var(--cell-off)}
+.yrs i.on{background:var(--lc)}
+.yrlab{display:grid;grid-template-columns:repeat(11,22px);gap:2px;font-family:var(--f-mono);font-size:.56rem;color:var(--muted);text-align:center}
+.kv{display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px 14px;font-size:.88rem}
+.kv dt{color:var(--muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.kv dd{margin:0}
+.ind{background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:.88rem}
+.ind + .ind{margin-top:8px}
+.ind b{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+.links{display:flex;flex-direction:column;gap:6px}
+.lnk{display:flex;gap:10px;align-items:baseline;text-align:left;background:none;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:.86rem}
+.lnk:hover{border-color:var(--line2)}
+.lnk .mono{color:var(--muted);flex:none}
+
+/* gantt */
+.chartbox{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px 12px;margin-block:8px 18px}
+.chartbox h3{font-size:1.05rem;font-weight:700}
+.chartbox .note{font-size:.8rem;color:var(--muted);margin:2px 0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--fg2);margin-bottom:8px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+.bars svg{display:block;width:100%;height:auto;overflow:visible}
+.gwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table.g{border-collapse:separate;border-spacing:0;width:100%;min-width:900px;font-size:.82rem}
+table.g th,table.g td{padding:0;border-bottom:1px solid var(--line)}
+table.g thead th{position:sticky;top:0;background:var(--surface);z-index:2;font-weight:700;font-size:.72rem;color:var(--fg2)}
+table.g .lab{position:sticky;left:0;background:var(--surface);z-index:1;padding:6px 12px;min-width:330px;max-width:330px;text-align:left;border-right:1px solid var(--line)}
+table.g thead .lab{z-index:3}
+table.g td.y{width:52px;padding:4px 2px}
+table.g td.y div{height:18px;border-radius:3px}
+table.g td.y div.on{background:var(--cc)}
+table.g tr.ini td{background:var(--sunk)}
+table.g tr.ini .lab{background:var(--sunk);font-weight:700;font-family:var(--f-display);font-size:.9rem}
+table.g tr.ini .lab .mono{font-weight:500;color:var(--muted);margin-right:6px}
+table.g tr.arow .lab{padding-left:26px;color:var(--fg2)}
+table.g tr.arow .lab .mono{margin-right:6px;color:var(--muted)}
+table.g tr.arow .lab .t{font-family:var(--f-mono);font-size:.64rem;margin-left:6px;padding:1px 5px;border-radius:3px;background:var(--n-x);color:var(--n-ink)}
+.hz th{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;padding:6px 4px!important;color:var(--fg)!important}
+.hz th.h1{background:var(--sunk)!important}
+.yh{padding:6px 2px!important;font-family:var(--f-mono)}
+table.g tr.ini:hover td,table.g tr.arow:hover td{filter:brightness(.97)}
+.tip{position:fixed;z-index:60;pointer-events:none;background:var(--fg);color:var(--bg);font-size:.78rem;padding:7px 10px;border-radius:6px;max-width:280px;box-shadow:var(--shadow)}
+.tip b{display:block}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:6px 12px;font-size:.82rem;cursor:pointer;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+
+/* complementarias */
+.ccard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.ccard .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ccard h4{margin:0;font-family:var(--f-display);font-size:1.05rem;font-weight:700;line-height:1.2}
+.fn{font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;border:1.5px solid var(--fg2);color:var(--fg2)}
+.fn.H{background:var(--accent);border-color:var(--accent);color:#fff}
+.ccard p{margin:0;font-size:.86rem;color:var(--fg2)}
+.ccard details summary{cursor:pointer;font-size:.8rem;font-weight:700;color:var(--muted)}
+.ccard ol{margin:6px 0 0;padding-left:20px;font-size:.85rem}
+.ccard .v{font-size:.82rem;border-top:1px dashed var(--line2);padding-top:8px;color:var(--fg2)}
+.ccard .v button{display:inline;text-align:left;background:none;border:0;padding:0;color:var(--fg);font-weight:700;text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px;cursor:pointer;font-size:.82rem}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-block:6px 18px}
+.def{border-top:3px solid var(--fg);padding-top:8px;font-size:.84rem;color:var(--fg2)}
+.def b{display:block;color:var(--fg);font-family:var(--f-display);font-size:.95rem;margin-bottom:2px}
+
+/* hoja de ruta */
+.phases{display:grid;grid-template-columns:3fr 4fr 6fr;gap:6px;margin-block:10px 6px}
+.ph{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--fg);border-radius:8px;padding:12px 14px;min-width:0}
+.ph:nth-child(2){border-top-color:var(--fg2)}
+.ph:nth-child(3){border-top-color:var(--muted)}
+.ph h4{margin:0;font-family:var(--f-display);font-size:1rem}
+.ph .yrs2{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.ph p{margin:6px 0 0;font-size:.86rem;color:var(--fg2)}
+.cal{list-style:none;margin:10px 0 0;padding:0;border-left:2px solid var(--line2)}
+.cal li{position:relative;padding:0 0 14px 22px}
+.cal li::before{content:"";position:absolute;left:-7px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--fg)}
+.cal li.k::before{background:var(--band);border-color:var(--band-ink)}
+.cal .yy{font-family:var(--f-display);font-weight:800;font-size:.95rem}
+.cal ul{margin:2px 0 0;padding-left:18px;font-size:.88rem;color:var(--fg2)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:34px;margin-block:18px 40px}
+.vis{display:flex;flex-direction:column;gap:14px}
+.visi{border-left:4px solid var(--lc);padding:2px 0 2px 14px}
+.visi .q{font-family:var(--f-display);font-weight:700;font-size:1rem}
+.visi p{margin:4px 0 0;font-size:.88rem;color:var(--fg2)}
+section[hidden]{display:none}
+.foot{border-top:1px solid var(--line);color:var(--muted);font-size:.78rem;padding-block:18px 30px}
+@media (max-width:760px){
+  .mast .wrap{grid-template-columns:1fr}
+  .two{grid-template-columns:1fr}
+  .phases{grid-template-columns:1fr}
+  input[type=search]{width:100%}
+  .kv{grid-template-columns:1fr}
+  .lecode{font-size:2rem}
+  table.g .lab{min-width:220px;max-width:220px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Ilustre Municipalidad de Santiago · Plan Estratégico de Desarrollo Turístico</div>
+      <h1>PLADETUR<span>Santiago 2026–2036</span></h1>
+    </div>
+    <div class="vision"><b>Nuestra visión</b>Visitar la comuna de Santiago es llegar al corazón de la capital de Chile. En 2036, su patrimonio histórico y arquitectónico convive con una escena gastronómica, artística y cultural que se renueva constantemente. Un lugar seguro, conectado y acogedor, activo durante todo el año, donde el turismo sostenible e inclusivo genera desarrollo local y fortalece el vínculo entre visitantes y residentes.</div>
+    <div class="kpis" style="grid-column:1/-1">
+      <div class="kpi"><strong>5</strong><span>Líneas estratégicas</span></div>
+      <div class="kpi"><strong>21</strong><span>Componentes</span></div>
+      <div class="kpi"><strong>40</strong><span>Iniciativas del núcleo</span></div>
+      <div class="kpi"><strong>115</strong><span>Acciones programadas</span></div>
+      <div class="kpi"><strong>36</strong><span>Iniciativas complementarias</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="t-estructura" aria-selected="true" data-tab="estructura">Estructura del plan</button>
+    <button class="tab" role="tab" id="t-cronograma" aria-selected="false" data-tab="cronograma">Cronograma 2026–2036</button>
+    <button class="tab" role="tab" id="t-complementarias" aria-selected="false" data-tab="complementarias">Complementarias</button>
+    <button class="tab" role="tab" id="t-ruta" aria-selected="false" data-tab="ruta">Hoja de ruta</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div id="filterbar">
+    <div class="filters">
+      <input type="search" id="q" placeholder="Buscar iniciativa, acción o unidad…" aria-label="Buscar">
+      <div class="chips" id="lineChips" aria-label="Filtrar por línea"></div>
+    </div>
+    <div class="filters" style="padding-top:0">
+      <select id="fPrio" aria-label="Prioridad"><option value="">Toda prioridad</option><option value="D">Detonante</option><option value="P">Priorizada</option><option value="A">Alta</option></select>
+      <select id="fNat" aria-label="Naturaleza"><option value="">Toda naturaleza</option><option value="EST">EST · Estudio</option><option value="INV">INV · Proyecto de inversión</option><option value="PRG">PRG · Programa</option><option value="NOR">NOR · Instrumento normativo</option><option value="GES">GES · Instrumento de gestión</option></select>
+      <select id="fSec" aria-label="Sector"><option value="">Todos los sectores</option><option value="NP">Norponiente</option><option value="NO">Nororiente</option><option value="CP">Centro Poniente</option><option value="CO">Centro Oriente</option><option value="SP">Surponiente</option><option value="SO">Suroriente</option></select>
+      <select id="fHz" aria-label="Plazo"><option value="">Todo plazo</option><option value="c">Corto plazo · 2026–2028</option><option value="i">Intermedio · 2029–2031</option><option value="l">Largo plazo · 2032–2036</option></select>
+      <button class="linkbtn" id="reset">Limpiar filtros</button>
+    </div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <section id="estructura" role="tabpanel" aria-labelledby="t-estructura"></section>
+
+  <section id="cronograma" role="tabpanel" aria-labelledby="t-cronograma" hidden>
+    <div class="chartbox">
+      <h3>Acciones en ejecución por año</h3>
+      <div class="note" id="barsNote"></div>
+      <div class="legend" id="barsLegend"></div>
+      <div class="bars" id="bars"></div>
+    </div>
+    <div class="filters" style="padding-top:0;justify-content:space-between">
+      <div class="seg" role="group" aria-label="Colorear por">
+        <button id="cLine" aria-pressed="true">Color por línea</button>
+        <button id="cNat" aria-pressed="false">Color por tipología</button>
+      </div>
+      <div class="legend" id="ganttLegend" style="margin:0"></div>
+    </div>
+    <div class="gwrap"><table class="g" id="gantt"></table></div>
+  </section>
+
+  <section id="complementarias" role="tabpanel" aria-labelledby="t-complementarias" hidden>
+    <p style="max-width:80ch;color:var(--fg2);margin:18px 0 6px">Las iniciativas complementarias fortalecen y facilitan la implementación del núcleo. Cada ficha declara su <b>naturaleza</b> y su <b>función</b> respecto de las líneas estratégicas, y se vincula con una o más iniciativas del núcleo.</p>
+    <div class="defs">
+      <div class="def"><b>Habilitante · 12</b>Debe ejecutarse antes o junto a una iniciativa del núcleo para que esta funcione. Su retraso bloquea al núcleo.</div>
+      <div class="def"><b>Profundización · 20</b>Amplía la cobertura, la escala o el alcance de una iniciativa del núcleo ya en marcha.</div>
+      <div class="def"><b>Continuidad · 2</b>Función o programa municipal existente que el plan mantiene, ordena y dota de meta y responsable.</div>
+      <div class="def"><b>Oportunidad · 2</b>Depende de una ventana externa que el municipio no controla: un fondo, una concesión, un convenio.</div>
+    </div>
+    <div class="filters" style="padding-top:0">
+      <div class="chips" id="cLineChips"></div>
+      <div class="chips" id="fnChips"></div>
+    </div>
+    <div class="count" id="ccount"></div>
+    <div class="cgrid" id="cgrid"></div>
+  </section>
+
+  <section id="ruta" role="tabpanel" aria-labelledby="t-ruta" hidden>
+    <div style="margin-top:22px">
+      <div class="eyebrow">Horizontes de ejecución</div>
+      <h2 style="font-size:1.6rem;margin-top:4px">Santiago: un destino turístico de carácter capital</h2>
+      <p style="max-width:80ch;color:var(--fg2)">El instrumento se organiza en tres horizontes coherentes con el plan de inversiones. Cada tramo tiene una función estratégica diferenciada dentro de la secuencia de maduración del destino.</p>
+      <div class="phases">
+        <div class="ph"><h4>Fase I · Corto plazo</h4><div class="yrs2">2026–2028</div><p>Instalación de gobernanza, corrección de brechas de información y proyectos habilitantes de bajo riesgo.</p></div>
+        <div class="ph"><h4>Fase II · Intermedio</h4><div class="yrs2">2028–2031</div><p>Diversificación territorial y escalamiento de experiencias hacia poniente y sur.</p></div>
+        <div class="ph"><h4>Fase III · Largo plazo</h4><div class="yrs2">2031–2036</div><p>Consolidación de marca, posicionamiento internacional y cierre de brechas estructurales de infraestructura.</p></div>
+      </div>
+    </div>
+    <div class="two">
+      <div>
+        <div class="eyebrow">Calendario del proyecto</div>
+        <ul class="cal">
+          <li class="k"><div class="yy">Año 0 · Inicio</div><ul><li>Aprobación del PLADETUR de Santiago 2026–2036</li><li>Formalización del catastro de atractivos SERNATUR</li></ul></li>
+          <li><div class="yy">Año 1</div><ul><li>Obtención del Sello de Distinción Turismo Municipal</li><li>Articulación del modelo de gobernanza</li></ul></li>
+          <li><div class="yy">Año 2</div><ul><li>Implementación de iniciativas detonantes y puesta en marcha del piloto del bus turístico comunal</li><li>Formulación y preparación de iniciativas definidas en el plan</li></ul></li>
+          <li><div class="yy">Año 3</div><ul><li>Formulación y preparación de iniciativas definidas en el plan</li><li>Escalamiento territorial de experiencias hacia poniente y sur</li></ul></li>
+          <li class="k"><div class="yy">Año 4 · Puesta en marcha</div><ul><li>Consolidación de zonas no consolidadas según matriz de evaluación de macrozonas</li><li>Evaluación intermedia del instrumento; ajuste de indicadores y metas de la cartera</li></ul></li>
+          <li><div class="yy">Años 5 a 8</div><ul><li>Ejecución de proyectos, planes y programas</li></ul></li>
+          <li class="k"><div class="yy">Año 9 · Término</div><ul><li>Evaluación de resultados de la línea Relato, Marca y Mercados</li><li>Evaluación de resultados de las líneas Gobernanza e Inteligencia y Capacidades Locales</li></ul></li>
+          <li><div class="yy">Año 10</div><ul><li>Evaluación de resultados de la línea Entorno Habilitante</li><li>Evaluación final del instrumento y formulación del ciclo sucesor</li></ul></li>
+        </ul>
+      </div>
+      <div>
+        <div class="eyebrow">Visiones temáticas y preguntas articuladoras</div>
+        <div class="vis" id="visions" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">Fuente: PLADETUR Santiago 2026–2036, Ilustre Municipalidad de Santiago (SECPLAN y Subdirección de Turismo). Programación anual tomada de la sección «Programación» del plan. La asignación a sectores se basa en el campo «Emplazamiento» de cada ficha; «Toda la comuna» aparece en todos los sectores.</div>
+</main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="dTitle"></aside>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const LINES = [
+ {n:1, name:"Relato, Marca y Mercados", q:"¿Cómo queremos que el mundo vea a Santiago y a quiénes queremos atraer?",
+  vision:"Santiago se proyecta como capital turística y destino barrial diverso, poniendo en valor su identidad histórica, arquitectónica y cultural mediante productos turísticos especializados que atraen visitantes nacionales e internacionales durante todo el año, con una arquitectura de marca jerarquizada que articula la escala comunal y la escala barrial sin fragmentar el relato.",
+  comps:[
+   {c:1, name:"Marca: Santiago Capital / Santiago Barrial", obj:"Construir y consolidar la marca turística de Santiago en dos escalas articuladas —comuna y barrio— mediante una arquitectura de marca jerarquizada y un relato basado en los atributos distintivos de la comuna, apropiado de manera coherente por todos los actores del sistema turístico y sostenido en el tiempo."},
+   {c:2, name:"Diferenciación y fidelización estratégica", obj:"Implementar una estrategia de posicionamiento diferenciado y fidelización para segmentos priorizados, definida a partir de criterios explícitos de gasto, estadía y estacionalidad, con el propósito de aumentar el gasto promedio, prolongar la permanencia y fortalecer la competitividad turística de Santiago."},
+   {c:3, name:"Difusión y posicionamiento", obj:"Focalizar la promoción en los mercados y segmentos con mayor afinidad a los atributos de Santiago, privilegiando el valor agregado del visitante por sobre el volumen, y fomentando presencia en los puntos de decisión de viaje de los mercados priorizados."}
+  ]},
+ {n:2, name:"Experiencias Turísticas", q:"¿Qué experiencias ofrecemos y cómo las gestionamos?",
+  vision:"Santiago se vive en sus barrios, sus sabores, su memoria y su cultura. La comuna consolida una oferta turística diversa y auténtica que integra patrimonio, gastronomía, arte, vida nocturna, bienestar y turismo activo, estructurada en productos comercializables con estándares de calidad verificables y distribuidos en todo el territorio comunal.",
+  comps:[
+   {c:1, name:"Patrimonio e historia", obj:"Convertir el patrimonio histórico y arquitectónico de Santiago en uno de sus principales argumentos turísticos, mediante interpretación de estándar internacional, accesibilidad universal y distribución territorial de los productos en todos los sectores de la comuna."},
+   {c:2, name:"Gastronomía", obj:"Posicionar a la comuna como referente de cultura gastronómica nacional y migrante, estructurando la oferta existente en productos turísticos comercializables que, al mismo tiempo, resguarden la función de abastecimiento local de los mercados tradicionales."},
+   {c:3, name:"Cultura", obj:"Fortalecer la conexión entre la producción cultural local y la demanda turística, promoviendo el aprendizaje activo, la interacción con las comunidades y la puesta en valor del destino mediante circuitos articulados de visita múltiple."},
+   {c:4, name:"Santiago nocturno", obj:"Transformar las actividades nocturnas en una dimensión turística propia de Santiago, con identidad, seguridad garantizada y oferta estructurada que extienda la estadía y aumente el gasto promedio del visitante sin deteriorar la convivencia residencial."},
+   {c:5, name:"Bienestar, naturaleza y turismo activo", obj:"Posicionar a Santiago como destino latinoamericano de bienestar y turismo activo urbano, capitalizando la singularidad de su relación cordillera-parques-ciudad para capturar el segmento de mayor crecimiento y gasto promedio global."},
+   {c:6, name:"Nuevos desarrollos", obj:"Diversificar la base territorial del turismo comunal activando los sectores poniente y sur como destinos con identidad propia y comunidades anfitrionas, para construir un turismo más resiliente y menos dependiente de un solo núcleo."}
+  ]},
+ {n:3, name:"Entorno Habilitante", q:"¿Cómo generar un entorno que permita el desarrollo del turismo?",
+  vision:"Santiago avanza hacia una comuna accesible, conectada, segura y acogedora, donde la movilidad multimodal, la experiencia peatonal, la sustentabilidad ambiental y la infraestructura de bienvenida hacen de cada visita un recorrido seguro, inclusivo y memorable.",
+  comps:[
+   {c:1, name:"Seguridad integral", obj:"Incrementar la seguridad objetiva y percibida de visitantes y prestadores de servicios turísticos, mediante coordinación interinstitucional, presencia diferenciada, activación del espacio público y protocolos de respuesta con tiempos comprometidos."},
+   {c:2, name:"Movilidad turística multimodal", obj:"Garantizar que moverse por Santiago sea parte de la experiencia y no un obstáculo, integrando transporte público, privado y activo en un sistema coherente de nodos jerarquizados que conecte los seis sectores territoriales de la comuna."},
+   {c:3, name:"Puesta en valor de atractivos comunales", obj:"Asegurar que cada atractivo comunal cuente con estándares mínimos verificables, conservación preventiva y financiamiento mixto que proteja el patrimonio antes de que el deterioro sea irreversible."},
+   {c:4, name:"Turismo accesible e inclusivo", obj:"Posicionar a Santiago como referente de turismo inclusivo, incorporando el diseño universal como estándar obligatorio en toda intervención de espacio público turístico y certificando con auditoría periódica a los atractivos y operadores que lo cumplen."},
+   {c:5, name:"Sustentabilidad ambiental del destino", obj:"Consolidar a la comuna como destino sustentable que protege sus activos ambientales —el río, el cerro, los parques y las unidades de paisaje— integrando la sustentabilidad como estándar obligatorio en toda la infraestructura y operación turística comunal y midiendo su huella."}
+  ]},
+ {n:4, name:"Gobernanza e Inteligencia", q:"¿Quién decide, cómo se decide y cómo se coordina el turismo en el territorio?",
+  vision:"Santiago gestiona su turismo con visión de futuro. La comuna articula a actores públicos, privados y comunitarios en torno a una planificación compartida, una institucionalidad con autonomía operativa, decisiones basadas en datos y marcos regulatorios que protegen el patrimonio, ordenan el desarrollo y resguardan la calidad de vida residencial.",
+  comps:[
+   {c:1, name:"Institucionalidad y recursos", obj:"Fortalecer una gobernanza turística descentralizada mediante una red articulada de actores públicos, privados, comunitarios y académicos, con estructuras barriales autónomas, dotación especializada, presupuesto, reglas de decisión explícitas y capacidad efectiva de diseñar política turística."},
+   {c:2, name:"Inteligencia del destino", obj:"Sustentar las decisiones de gestión en evidencia, mediante un sistema permanente de indicadores, un observatorio comunal de acceso público y el monitoreo sistemático de los impactos del turismo sobre el territorio y la población residente."},
+   {c:3, name:"Normativa y planificación territorial", obj:"Dotar al destino de normativa propia, zonas turísticas declaradas y planificación territorial que ordene, habilite y proteja la actividad turística comunal en el largo plazo, resguardando la convivencia turístico-residencial."}
+  ]},
+ {n:5, name:"Capacidades Locales y Ciudadanía", q:"¿Cómo se beneficia el ecosistema?",
+  vision:"El turismo en Santiago crece con y para su gente. La actividad turística se consolida como motor de desarrollo económico inclusivo, fortaleciendo la cadena de servicios, la formación, el empleo y las oportunidades para residentes, emprendedores y actores del ecosistema comunal.",
+  comps:[
+   {c:1, name:"Turismo social comunal", obj:"Ampliar sostenidamente el acceso de la población residente al patrimonio y la oferta turística comunal, con prioridad en población vulnerable, personas mayores y jóvenes, consolidando el turismo social como indicador de éxito del PLADETUR."},
+   {c:2, name:"Calidad de la cadena de servicio", obj:"Incrementar la satisfacción del visitante mediante la elevación del estándar de servicio en toda la cadena turística comunal, con certificación progresiva auditada por terceros y formación continua gratuita para el ecosistema."},
+   {c:3, name:"Economía turística local", obj:"Asegurar que los beneficios económicos del turismo lleguen a quienes habitan el destino, integrando a emprendedores barriales, comunidades y sectores vulnerables en la cadena de valor turística comunal con instrumentos de formalización, financiamiento y comercialización."},
+   {c:4, name:"Capital humano y formación técnica", obj:"Formar a las personas que hacen posible el destino —guías barriales, emprendedores, agentes culturales, equipo técnico municipal y residentes— con habilidades prácticas y conocimiento especializado, convirtiéndolos en actores activos del turismo comunal."}
+  ]}
+];
+
+// p: D = Detonante, P = Priorizada, A = Alta (categoría que aparece en la ficha 1-2)
+const CORE = [
+ // ---------- LE1
+ {le:1,c:1,n:"1-1",t:"Sistema de Marca Santiago",p:"D",
+  obj:"Diseñar, implementar y difundir la arquitectura de marca Santiago Capital y Santiago Barrial, estableciendo una marca comunal con submarcas barriales coordinadas y reglas de uso obligatorias para toda comunicación oficial del destino.",
+  acts:["Elaborar un manual de marca con arquitectura jerarquizada (marca comunal, submarcas barriales, identidad visual, mensajes clave y lineamientos de uso obligatorio) e implementar actividades de difusión del documento con los actores del ecosistema",
+        "Producir un banco de contenidos audiovisuales liberado (video 4K, fotografía editorial y podcast)",
+        "Implementar un protocolo de licencia de uso de marca para operadores certificados, con renovación anual condicionada al cumplimiento de estándares",
+        "Reclutar y capacitar una red de embajadores digitales especializados en turismo cultural y gastronómico para difundir el contenido en mercados priorizados"],
+  nat:["EST","GES"],emp:"Toda la comuna",resp:"Turismo, Comunicaciones",
+  ip:"N° de operadores y unidades municipales con licencia de uso de marca vigente (registro municipal de licencias)",
+  ir:"% de reconocimiento de la marca Santiago entre visitantes de mercados priorizados (encuesta de perfil del visitante)"},
+ {le:1,c:1,n:"1-2",t:"Planes de Identidad Barrial",p:"A",
+  obj:"Recopilar la memoria, historia y atributos culturales de cada barrio y traducirlos en un relato propio y una identidad visual diferenciadora, que a la vez dialogue con la escala comunal.",
+  acts:["Realizar talleres barriales participativos de levantamiento de atributos y valores turísticos en los seis sectores territoriales",
+        "Diseñar e instalar señalética e hitos físicos en el territorio basados en los atributos identitarios levantados",
+        "Sistematizar la información en una base documental y capacitar a actores del ecosistema turístico en su uso"],
+  nat:["EST","INV"],emp:"Toda la comuna",resp:"Turismo, SECPLAN, Cultura y Patrimonio",
+  ip:"N° de sectores territoriales (de 6) con plan de identidad barrial aprobado por resolución",
+  ir:"% de operadores del sector que incorporan el relato e identidad barrial en su comunicación (muestreo anual)"},
+ {le:1,c:2,n:"2-1",t:"Matriz de priorización de segmentos y mercados",p:"D",
+  obj:"Establecer criterios técnicos explícitos y verificables de priorización de segmentos y mercados emisores —gasto diario, duración de estadía, estacionalidad, complementariedad con la oferta y costo de captación— que orienten la asignación del presupuesto de promoción.",
+  acts:["Desarrollar una matriz de priorización con ponderadores por criterio y aplicarla a los segmentos y mercados candidatos",
+        "Elaborar perfiles de demanda (buyer persona) por segmento priorizado con canales, mensajes y puntos de decisión de viaje",
+        "Establecer una regla de asignación presupuestaria de promoción vinculada al puntaje de la matriz, con revisión anual"],
+  nat:["EST","GES"],emp:"Toda la comuna",resp:"Turismo",
+  ip:"Matriz aprobada y N° de segmentos/mercados evaluados con la matriz por año",
+  ir:"% del presupuesto anual de promoción asignado conforme al puntaje de la matriz (decreto presupuestario)"},
+ {le:1,c:2,n:"2-2",t:"Santiago Eventos (MICE)",p:"D",
+  obj:"Posicionar a la comuna de Santiago como la principal sede de congresos, convenciones y eventos corporativos de la Región Metropolitana, capitalizando las disciplinas en que el país tiene ventaja comparativa.",
+  acts:["Articular con el organismo público-privado responsable de la captación de congresos, con mandato, fondos y metas definidas",
+        "Habilitar inmuebles municipales patrimoniales como venues de alto estándar con canon en UF y componente variable sobre ingresos",
+        "Elaborar y mantener un catálogo oficial de espacios para eventos patrimoniales, culturales y corporativos"],
+  nat:["GES","INV"],emp:"Norponiente – Nororiente",resp:"Turismo, Administración Municipal",
+  ip:"N° de venues municipales habilitados e incorporados al catálogo oficial",
+  ir:"N° de eventos MICE realizados en la comuna por año (registro de captación; delegados como variable complementaria)"},
+ {le:1,c:3,n:"3-1",t:"Posicionamiento y permanencia",p:"D",
+  obj:"Difundir los atributos y atractivos de la comuna en los distintos puntos de decisión de visita, posicionando a Santiago como destino de estadía y no solo de paso.",
+  acts:["Desarrollar un kit integral de campaña basado en el manual de marca, con piezas gráficas, mensajes y material audiovisual",
+        "Fortalecer la presencia de la comuna en ferias internacionales (WTM, ITB, FITUR, FIT) mediante coordinación con instituciones públicas y privadas",
+        "Implementar una campaña específica de gestión de la reputación de seguridad del destino en mercados priorizados"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"Comunicaciones, Turismo, Gabinete",
+  ip:"% de cumplimiento del plan anual de promoción (campañas y ferias ejecutadas vs. programadas)",
+  ir:"Estadía promedio del visitante en la comuna (noches; encuesta de perfil del visitante)"},
+ {le:1,c:3,n:"3-2",t:"Plataforma Santiago Virtual",p:"D",
+  obj:"Promover el destino en mercados lejanos y en el segmento escolar y académico mediante una plataforma de visitas virtuales que opere como herramienta de preventa y como recurso educativo.",
+  acts:["Desarrollar una plataforma de visitas virtuales de los atractivos de mayor jerarquía con navegación multilingüe",
+        "Integrar la plataforma con el sistema de reserva y con los canales digitales oficiales del destino"],
+  nat:["GES"],emp:"Toda la comuna",resp:"Comunicaciones, Turismo",
+  ip:"N° de atractivos con visita virtual publicada y operativa en la plataforma",
+  ir:"Tasa de conversión de sesión virtual a reserva (%; analítica de la plataforma)"},
+ // ---------- LE2
+ {le:2,c:1,n:"1-1",t:"Barrios de autor",p:"D",
+  obj:"Convertir los barrios con mayor identidad de oficios en experiencias turísticas interactivas, con relato propio, anfitriones locales y diferenciación clara entre sí.",
+  acts:["Diseñar e implementar una estrategia piloto de experiencias turísticas en cuatro barrios de autor, incorporando al menos dos de los sectores poniente y sur",
+        "Evaluar el piloto y replicar acciones considerando criterios de demanda, carga y sostenibilidad"],
+  nat:["PRG"],emp:"Norponiente – Nororiente – Surponiente",resp:"Turismo",
+  ip:"N° de barrios con experiencia de autor operativa (meta piloto: 4)",
+  ir:"N° de visitantes anuales atendidos en experiencias de barrios de autor (registro de operación)"},
+ {le:2,c:2,n:"2-1",t:"Gastronomía como producto turístico",p:"D",
+  obj:"Incorporar las experiencias gastronómicas en la oferta organizada de la comuna como productos permanentes y comercializables, con identidad barrial diferenciada.",
+  acts:["Desarrollar festivales de barrio que combinen gastronomía, identidad local y programación cultural",
+        "Implementar un circuito anual de ferias turísticas vinculadas a la gastronomía y enología",
+        "Implementar una ruta gastronómica oficial como oferta permanente de la Subdirección de Turismo, con categorías diferenciadas y anfitriones por barrio"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"Turismo, Cultura y Patrimonio",
+  ip:"N° de establecimientos adheridos a la ruta gastronómica oficial",
+  ir:"N° de asistentes anuales a experiencias gastronómicas organizadas (festivales, ferias y ruta; registro de eventos)"},
+ {le:2,c:3,n:"3-1",t:"Circuitos culturales",p:"D",
+  obj:"Fortalecer la difusión del patrimonio cultural existente de la comuna en circuitos turísticos que articulen la oferta, faciliten el acceso a la información e incentiven la visita múltiple.",
+  acts:["Crear una estrategia de articulación de la oferta de museos y espacios culturales de administración municipal en un circuito de visita múltiple",
+        "Mejorar y unificar un calendario de actividades artísticas en la comuna de fácil consulta para visitantes",
+        "Desarrollar un recorrido temático en torno al arte y cultura santiaguina como oferta permanente de la Subdirección de Turismo"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"Cultura y Patrimonio, Turismo, SECPLAN",
+  ip:"N° de espacios culturales integrados al circuito de visita múltiple",
+  ir:"% de usuarios del circuito que visita 2 o más espacios (tasa de visita múltiple; sistema de registro del circuito)"},
+ {le:2,c:4,n:"4-1",t:"Museos y atractivos de medianoche",p:"D",
+  obj:"Extender la estadía y redistribuir los flujos de visitantes mediante la apertura en horario extendido de museos y atractivos patrimoniales como programa permanente, con modelo de operación y financiamiento definido.",
+  acts:["Implementar un piloto de horario extendido (18:00 a 22:00 horas) en museos y atractivos priorizados de administración municipal",
+        "Evaluar el piloto con indicadores de asistencia y sostenibilidad financiera antes de escalar al resto de la red"],
+  nat:["PRG"],emp:"Norponiente – Nororiente",resp:"Cultura y Patrimonio, Turismo",
+  ip:"N° de museos y atractivos con horario extendido operando por temporada",
+  ir:"N° de visitantes en horario extendido por temporada (% de autofinanciamiento como variable de gestión)"},
+ {le:2,c:4,n:"4-2",t:"Terrazas y azoteas HORECA",p:"D",
+  obj:"Fortalecer la existencia de azoteas y terrazas gastronómicas en zonas turísticas, con normativa de convivencia y estándares de calidad que enriquezcan la experiencia nocturna y funcionen como vistas panorámicas.",
+  acts:["Implementar una estrategia de difusión de las terrazas y azoteas existentes",
+        "Desarrollar un mapa virtual de las terrazas y azoteas con vistas panorámicas"],
+  nat:["PRG"],emp:"Norponiente – Nororiente – Centro Poniente – Centro Oriente",resp:"Comunicaciones, Turismo",
+  ip:"Mapa virtual publicado y N° de terrazas y miradores incorporados",
+  ir:"N° de terrazas con permiso vigente en zonas turísticas (registro de patentes y permisos BNUP)"},
+ {le:2,c:5,n:"5-1",t:"Corredores y rutas activas urbanas",p:"D",
+  obj:"Promover el carácter recreativo y de bienestar de la comuna mediante la habilitación de ejes estructurantes para usos deportivos y de movilidad activa.",
+  acts:["Habilitar los ejes principales de la ciudad como corredores verdes para usos deportivos y de bienestar, articulando el Mapocho, los parques y los cerros",
+        "Habilitar rutas temáticas de cicloturismo urbano integradas a la red de ciclovías"],
+  nat:["INV"],emp:"Toda la comuna",resp:"SECPLAN, DOM, Tránsito, Operaciones y Servicios Urbanos",
+  ip:"Km de corredores y rutas activas habilitados",
+  ir:"N° de usuarios (peatones y ciclistas) en conteos periódicos en los ejes habilitados (conteos de flujo)"},
+ {le:2,c:5,n:"5-2",t:"Santiago Activo (eventos deportivos)",p:"D",
+  obj:"Posicionar a Santiago como sede de eventos deportivos de participación activa con sello comunal propio, concentrados en una temporada ancla que genere flujo turístico de bajo costo de captación.",
+  acts:["Atraer y programar eventos deportivos de participación activa con sello comunal",
+        "Estructurar una semana anual de turismo activo que integre caminabilidad, cicloturismo, running y bienestar en un solo producto promocionable",
+        "Coordinar el calendario de eventos con los prestadores de servicios turísticos para la creación de paquetes de alojamiento y gastronomía asociados, con el objetivo de incrementar las pernoctaciones y la permanencia del visitante"],
+  nat:["PRG","GES"],emp:"Toda la comuna",resp:"Turismo, Deporte, Gabinete, DIDEL",
+  ip:"N° de eventos deportivos de participación activa realizados por año (incluida la semana ancla)",
+  ir:"N° de participantes inscritos residentes fuera de la Región Metropolitana (proxy de flujo turístico; registros de inscripción)"},
+ {le:2,c:6,n:"6-1",t:"Red de microdestinos",p:"D",
+  obj:"Diversificar la oferta de la comuna desarrollando una red de microdestinos en los barrios emergentes de los sectores poniente y sur, con identidad, servicios básicos y comercialización propia.",
+  acts:["Elaborar un programa de barrios turísticos de la comuna, con criterios de selección, estándar mínimo y secuencia de activación",
+        "Implementar un piloto de circuito turístico en el sector sur de la comuna articulando patrimonio industrial, mercados y cultura emergente",
+        "Implementar un segundo piloto en el sector poniente y evaluar ambos con indicadores comparables"],
+  nat:["PRG","GES"],emp:"Poniente – Sur",resp:"Turismo",
+  ip:"N° de microdestinos activados conforme al estándar del programa",
+  ir:"% de la afluencia comunal medida en sectores poniente y sur (conteos en nodos; método de medición por definir)"},
+ {le:2,c:6,n:"6-2",t:"Experiencias de cotidianidad certificadas",p:"D",
+  obj:"Habilitar a residentes como anfitriones de experiencias cotidianas y de oficio bajo un estándar municipal de calidad, seguridad y formalización, como mecanismo de difusión cultural y desarrollo económico barrial.",
+  acts:["Definir el estándar de certificación de experiencias cotidianas",
+        "Formar y certificar a 100 residentes anfitriones priorizando los sectores poniente y sur",
+        "Integrar las experiencias certificadas a los canales oficiales de difusión"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"Turismo, DIDEL",
+  ip:"N° de anfitriones residentes certificados con oferta publicada (meta: 100)",
+  ir:"Ventas anuales generadas por las experiencias certificadas (CLP; reporte de anfitriones y canales oficiales)"},
+ {le:2,c:6,n:"6-3",t:"Segmentos especiales y de alto valor",p:"P",
+  obj:"Definir estándares y mecanismos de incentivo para que operadores privados estructuren rutas temáticas premium y estadías slow travel en barrios turísticos.",
+  acts:["Elaborar un catastro de servicios disponibles de alto valor",
+        "Promover la implementación de paquetes de estadía en la comuna por parte de operadores turísticos"],
+  nat:["GES"],emp:"Toda la comuna",resp:"Turismo, DIDEL",
+  ip:"N° de operadores privados adheridos a los estándares e incentivos definidos",
+  ir:"N° de paquetes premium y slow travel comercializados por año (reporte de operadores adheridos)"},
+ // ---------- LE3
+ {le:3,c:1,n:"1-1",t:"Coordinación y gestión de la seguridad turística",p:"D",
+  obj:"Coordinar al municipio y a las policías en un protocolo único de seguridad turística con responsabilidades, zonas y tiempos de respuesta definidos y exigibles.",
+  acts:["Diseñar un protocolo único de seguridad turística con zonas priorizadas y capacitar a los actores del ecosistema",
+        "Implementar un sistema de registro, monitoreo y respuesta a incidentes turísticos con reporte mensual"],
+  nat:["NOR","GES"],emp:"Toda la comuna",resp:"Prevención y Seguridad Comunitaria, Turismo",
+  ip:"Protocolo único suscrito por todas las instituciones y % de zonas priorizadas cubiertas",
+  ir:"Tiempo promedio de respuesta a incidentes turísticos (minutos; sistema de registro de incidentes)"},
+ {le:3,c:1,n:"1-2",t:"Guardia turística municipal",p:"D",
+  obj:"Aumentar el soporte de seguridad e información a visitantes mediante presencia municipal diferenciada, multilingüe e identificable en los principales puntos turísticos.",
+  acts:["Implementar una guardia turística municipal diferenciada, multilingüe y con uniforme distintivo",
+        "Implementar un sistema de seguridad nocturna con personal capacitado y comunicación en tiempo real",
+        "Capacitar a la guardia en primera acogida, canalización de denuncias y protocolos de emergencia"],
+  nat:["PRG"],emp:"Norponiente – Nororiente",resp:"Prevención y Seguridad Comunitaria, Turismo",
+  ip:"N° de puntos turísticos con cobertura de guardia en horario definido",
+  ir:"% de visitantes que declara percepción de seguridad positiva en puntos con guardia (encuesta del visitante)"},
+ {le:3,c:1,n:"1-3",t:"Prevención de la explotación de NNA",p:"D",
+  obj:"Implementar mecanismos para involucrar al sector turismo en la protección de niños, niñas y adolescentes contra la explotación, en concordancia con la normativa nacional vigente.",
+  acts:["Realizar capacitaciones al sector turismo en detección y protocolos de denuncia",
+        "Promover la adhesión de establecimientos de alojamiento y operadores al código de conducta nacional"],
+  nat:["PRG","GES"],emp:"Toda la comuna",resp:"DIDECO, Turismo",
+  ip:"N° de trabajadores del sector capacitados en detección y protocolos de denuncia por año",
+  ir:"N° de establecimientos de alojamiento y operadores adheridos al código de conducta nacional (registro de adhesiones)"},
+ {le:3,c:1,n:"1-4",t:"Santiago Destino Seguro Certificado",p:"D",
+  obj:"Consolidar las iniciativas de seguridad turística en un estándar comunal verificable y comunicable externamente, que permita revertir la percepción de inseguridad en los mercados emisores.",
+  acts:["Definir el estándar comunal de «zona turística segura» (iluminación, presencia, cámaras, señalética, higiene urbana, tiempos de respuesta y protocolo de asistencia)",
+        "Comunicar los resultados verificados en los canales de promoción y ante operadores nacionales e internacionales"],
+  nat:["NOR","GES"],emp:"Toda la comuna",resp:"Prevención y Seguridad Comunitaria, Turismo, Comunicaciones",
+  ip:"N° de zonas certificadas bajo el estándar comunal de zona turística segura",
+  ir:"% de visitantes que se sintió seguro durante su visita (encuesta del visitante, medición semestral)"},
+ {le:3,c:2,n:"2-1",t:"Ordenamiento del transporte turístico privado",p:"D",
+  obj:"Mejorar la logística urbana de los servicios de transporte turístico, reduciendo fricciones en los nodos de mayor afluencia y formalizando la oferta.",
+  acts:["Habilitar paraderos diferenciados para transporte turístico en los nodos de mayor afluencia",
+        "Formalizar un registro de operadores de transporte turístico con estándares de calidad y tarifas transparentes"],
+  nat:["NOR","GES"],emp:"Norponiente – Nororiente",resp:"Tránsito",
+  ip:"N° de paraderos diferenciados de transporte turístico habilitados en nodos priorizados",
+  ir:"% de operadores de transporte turístico identificados que están inscritos en el registro comunal (registro / fiscalización)"},
+ {le:3,c:2,n:"2-2",t:"Conectividad digital turística",p:"D",
+  obj:"Garantizar conectividad digital gratuita y permanente en las zonas turísticas como condición habilitante de la experiencia digital del visitante.",
+  acts:["Habilitar wifi gratuito en las zonas turísticas prioritarias con estándar de velocidad y disponibilidad comprometido"],
+  nat:["INV"],emp:"Toda la comuna",resp:"SECPLAN",
+  ip:"N° de zonas turísticas con wifi gratuito operativo según estándar comprometido",
+  ir:"Usuarios únicos mensuales promedio de la red wifi turística (analítica de red; disponibilidad como variable de gestión)"},
+ {le:3,c:2,n:"2-3",t:"Bus turístico comunal",p:"P",
+  obj:"Facilitar el acceso y desplazamiento hacia los atractivos de los sectores poniente y sur mediante un servicio de transporte turístico comunal gratuito con guiado incorporado.",
+  acts:["Implementar un bus turístico comunal gratuito",
+        "Integrar guías municipales al servicio para dar a conocer los atractivos de los sectores emergentes",
+        "Evaluar el piloto con indicadores de ocupación y de visitas inducidas antes de ampliar la frecuencia"],
+  nat:["INV","PRG"],emp:"Toda la comuna",resp:"Tránsito, Turismo",
+  ip:"N° de pasajeros transportados por año en el bus turístico comunal",
+  ir:"% de pasajeros que visita atractivos de poniente y sur inducido por el servicio (encuesta a bordo)"},
+ {le:3,c:2,n:"2-4",t:"Red de nodos turísticos jerarquizados",p:"P",
+  obj:"Ordenar la estructura territorial del destino definiendo nodos primarios y secundarios con estándar diferenciado de servicios y reglas de enrutamiento que distribuyan los flujos hacia toda la comuna.",
+  acts:["Definir la jerarquía de nodos turísticos comunales sobre la base del catastro de atractivos y del análisis de flujos peatonales",
+        "Establecer el estándar de servicios obligatorio para cada nivel de nodo (información, sanitarios, descanso, conectividad y señalética)",
+        "Implementar puntos de información turística en cada uno de los nodos priorizados"],
+  nat:["INV"],emp:"Toda la comuna",resp:"SECPLAN, Turismo",
+  ip:"N° de nodos habilitados conforme al estándar de su nivel",
+  ir:"% del flujo de visitantes que alcanza nodos secundarios (conteos de flujo en nodos)"},
+ {le:3,c:3,n:"3-1",t:"Diagnóstico y monitoreo de atractivos",p:"D",
+  obj:"Aumentar la eficiencia de la gestión de los atractivos turísticos mediante catastro técnico actualizado y un sistema de monitoreo.",
+  acts:["Elaborar un catastro técnico de atractivos en estado crítico con diagnóstico, costo de intervención y priorización",
+        "Implementar un sistema de monitoreo digital de estándares de calidad y condiciones obligatorias por atractivo",
+        "Establecer un índice de activación turística por atractivo y vincular su resultado a la permanencia en los circuitos oficiales"],
+  nat:["EST","GES"],emp:"Toda la comuna",resp:"Turismo, Cultura y Patrimonio",
+  ip:"% de atractivos del catastro con ficha de monitoreo actualizada",
+  ir:"% de atractivos que cumple los estándares mínimos verificados (sistema de monitoreo)"},
+ {le:3,c:3,n:"3-2",t:"Mejoramiento y conservación de atractivos",p:"D",
+  obj:"Salvaguardar el valor de los atractivos turísticos comunales sustituyendo la lógica de reparación por emergencia por un régimen de mantención preventiva con presupuesto garantizado y financiamiento mixto.",
+  acts:["Definir un calendario y estándares de mantención preventiva de atractivos de administración municipal",
+        "Gestionar financiamiento complementario de los atractivos en estado crítico",
+        "Concesionar inmuebles de administración municipal que cumplan condiciones y que aporten al valor turístico de la comuna",
+        "Implementar el programa «Adopta un Monumento» para vincular al sector privado en la corresponsabilidad de conservación"],
+  nat:["INV"],emp:"Toda la comuna",resp:"Operaciones y Servicios Urbanos, Cultura y Patrimonio, SECPLAN",
+  ip:"% de atractivos municipales con mantención preventiva ejecutada según calendario",
+  ir:"N° de atractivos que salen del estado crítico por año (catastro técnico actualizado)"},
+ {le:3,c:4,n:"4-1",t:"Diagnóstico e intervención en accesibilidad universal",p:"P",
+  obj:"Promover el acceso universal a los atractivos turísticos, partiendo por un diagnóstico técnico de barreras que justifique la priorización de la inversión.",
+  acts:["Elaborar un diagnóstico de barreras de accesibilidad en entornos patrimoniales y turísticos de mayor afluencia conforme a la normativa vigente",
+        "Ejecutar intervenciones de accesibilidad universal en los atractivos priorizados según el diagnóstico"],
+  nat:["INV","GES"],emp:"Toda la comuna",resp:"SECPLAN, DOM, Operaciones y Servicios Urbanos, DIDECO",
+  ip:"N° de intervenciones de accesibilidad universal ejecutadas en atractivos priorizados",
+  ir:"% de atractivos priorizados certificados como accesibles (sin barreras según norma; verificación técnica)"},
+ {le:3,c:5,n:"5-1",t:"Gestión de residuos y mantención diferenciada",p:"D",
+  obj:"Fortalecer el sistema de gestión de residuos y de limpieza urbana de las zonas turísticas mediante un estándar diferenciado por nivel de afluencia, con frecuencias y presupuesto asignados por zona.",
+  acts:["Implementar pilotaje de barrio de basura cero en zonas turísticas prioritarias",
+        "Desarrollar un plan de educación ambiental y protocolo de gestión de residuos por zona turística",
+        "Implementar un plan anual de mantenimiento y limpieza de fachadas en ejes patrimoniales priorizados",
+        "Establecer un estándar de frecuencia de limpieza diferenciado por nivel de nodo turístico con presupuesto asignado"],
+  nat:["PRG","GES"],emp:"Toda la comuna",resp:"Operaciones y Servicios Urbanos, Medioambiente",
+  ip:"% de zonas turísticas con estándar diferenciado de limpieza implementado (frecuencias y presupuesto asignados)",
+  ir:"Índice de limpieza en zonas turísticas priorizadas (pauta de inspección con puntaje definido, medición trimestral por muestreo)"},
+ // ---------- LE4
+ {le:4,c:1,n:"1-1",t:"Agencia y hub de turismo comunal",p:"P",
+  obj:"Dotar al destino de una estructura de gestión con autonomía operativa, gobierno corporativo definido y financiamiento diversificado, capaz de sostener la implementación del plan más allá del ciclo municipal.",
+  acts:["Desarrollar una corporación municipal mixta con autonomía operativa y financiamiento diversificado",
+        "Definir el gobierno corporativo de la agencia (composición paritaria del directorio, perfil y periodo de la dirección ejecutiva, e indicadores de desempeño públicos)",
+        "Establecer el modelo de ingresos de la agencia (canon de concesiones, venta de servicios, aportes públicos y privados)",
+        "Habilitar un espacio físico tipo hub como centro de coordinación operativa y atención a operadores y visitantes"],
+  nat:["GES","INV"],emp:"Centro Histórico",resp:"Turismo, Administración Municipal, SECPLAN",
+  ip:"Hitos institucionales cumplidos: agencia constituida, gobierno corporativo definido y hub operativo",
+  ir:"% de ingresos propios sobre el presupuesto total de la agencia (estados financieros anuales)"},
+ {le:4,c:1,n:"1-2",t:"Mesas de coordinación y gobernanzas turísticas",p:"D",
+  obj:"Institucionalizar la coordinación turística comunal mediante una mesa permanente con representación real de todos los actores, reglas de decisión explícitas y compromisos exigibles.",
+  acts:["Constituir una mesa permanente de coordinación turística con representación de todos los actores de la red",
+        "Establecer el reglamento de funcionamiento de la mesa con quórum, ponderación de votos y periodicidad de sesiones",
+        "Articular la red comunal con SERNATUR, GORE y CORFO para acceso a financiamiento y cooperación técnica",
+        "Formalizar convenios de colaboración con indicadores, plazos y mecanismos de rendición de cuentas por actor",
+        "Crear estructuras de gobernanza autónoma en los seis sectores territoriales de la comuna con actores barriales"],
+  nat:["GES"],emp:"Toda la comuna",resp:"Turismo, Administración Municipal, Secretaría Municipal",
+  ip:"N° de sesiones de la mesa realizadas por año con quórum reglamentario",
+  ir:"% de compromisos de convenios cumplidos en plazo por actor (reporte de rendición de cuentas)"},
+ {le:4,c:2,n:"2-1",t:"Sistema de indicadores de impacto",p:"D",
+  obj:"Proyectar el desarrollo turístico y sus impactos en el territorio mediante un sistema de medición permanente con línea base, metas y umbrales de alerta definidos.",
+  acts:["Implementar el cuadro de mando del PLADETUR con los indicadores de la hoja de indicadores, sus líneas base y sus metas",
+        "Establecer la frecuencia de actualización y el responsable de reporte por indicador",
+        "Definir umbrales de alerta que gatillen medidas correctivas en la mesa permanente"],
+  nat:["EST","GES"],emp:"Toda la comuna",resp:"Turismo, SECPLAN",
+  ip:"% de indicadores del cuadro de mando con línea base y meta definidas",
+  ir:"% de indicadores con dato actualizado según la frecuencia comprometida (cuadro de mando)"},
+ {le:4,c:2,n:"2-2",t:"Observatorio y plataforma digital",p:"D",
+  obj:"Facilitar el acceso público a los datos e información del turismo comunal y fortalecer los canales digitales oficiales del destino.",
+  acts:["Desarrollar una plataforma abierta y permanentemente actualizada con los datos del destino",
+        "Rediseñar el sitio web y las redes sociales de la oficina de turismo comunal como plataforma digital integral",
+        "Implementar un sistema de agendamiento de tours en línea integrado a la plataforma de servicios al visitante"],
+  nat:["GES","PRG"],emp:"Toda la comuna",resp:"Turismo, SECPLAN, Comunicaciones",
+  ip:"N° de series de datos publicadas y con actualización vigente en el observatorio",
+  ir:"N° de usuarios únicos anuales de la plataforma digital del destino (analítica web)"},
+ {le:4,c:3,n:"3-1",t:"Instrumentos de planificación y regulación territorial",p:"D",
+  obj:"Planificar la actividad turística mediante instrumentos formales de declaratoria, regulación y gestión de riesgos, alineados con instrumentos de carácter regional y nacional.",
+  acts:["Postular, obtener y mantener la distinción de Comuna Turística de SERNATUR",
+        "Obtener la declaratoria de Zonas de Interés Turístico (ZOIT) en los sectores prioritarios",
+        "Crear una normativa municipal específica de turismo que regule guías, operadores, eventos y uso del espacio público",
+        "Incorporar un apartado turístico especializado en el plan comunal de gestión de riesgos",
+        "Impulsar un marco regulatorio y un registro comunal de viviendas de uso turístico para plataformas de corta estadía"],
+  nat:["NOR","GES"],emp:"Toda la comuna",resp:"SECPLAN, Turismo, Asesoría Jurídica",
+  ip:"N° de instrumentos formalmente aprobados y vigentes (meta: 5 — distinción, ZOIT, ordenanza, apartado de riesgos, registro de viviendas turísticas)",
+  ir:"% de prestadores y viviendas de uso turístico operando bajo registro o regulación vigente (registros municipales)"},
+ {le:4,c:3,n:"3-2",t:"Convivencia turístico-residencial",p:"D",
+  obj:"Armonizar la relación entre desarrollo turístico y calidad de vida de los residentes mediante acuerdos barriales vinculantes, fiscalización efectiva y un canal formal de resolución de conflictos.",
+  acts:["Desarrollar planes de convivencia por barrio con medidas específicas y mecanismo de ajuste anual",
+        "Establecer un plan de vigilancia de la actividad turística nocturna en barrios residenciales (zonas, horarios y decibeles) con respuesta garantizada a denuncias",
+        "Implementar un canal único de recepción y resolución de reclamos vecinales vinculados al turismo, con plazo máximo de respuesta y reporte público"],
+  nat:["NOR","GES"],emp:"Toda la comuna",resp:"DIDECO, Asesoría Jurídica, Fiscalización, Prevención y Seguridad Comunitaria",
+  ip:"N° de barrios con plan de convivencia vigente y canal único de reclamos operativo",
+  ir:"% de reclamos vecinales resueltos dentro del plazo comprometido (sistema del canal único; complementar con encuesta anual de actitud residente)"},
+ // ---------- LE5
+ {le:5,c:1,n:"1-1",t:"Programa de turismo social",p:"P",
+  obj:"Multiplicar la cobertura del programa de turismo social con rutas diferenciadas por perfil —escolares, personas mayores, jóvenes y familias— priorizando a la población residente en situación de vulnerabilidad.",
+  acts:["Diseñar e implementar rutas diferenciadas para escolares y jóvenes",
+        "Diseñar e implementar rutas diferenciadas para personas mayores y familias",
+        "Establecer una meta anual de cobertura y un mecanismo de focalización por sector territorial"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"DIDECO, Turismo",
+  ip:"N° de rutas diferenciadas por perfil operativas (meta: 4 perfiles)",
+  ir:"N° de residentes beneficiados por año y % proveniente de población priorizada (registros del programa)"},
+ {le:5,c:2,n:"2-1",t:"Estándares y sello de calidad turística",p:"D",
+  obj:"Elevar la calidad del servicio en los puntos turísticos críticos mediante estándares mínimos exigibles y un sello de reconocimiento progresivo auditado por terceros.",
+  acts:["Definir estándares mínimos de servicio para los puntos turísticos críticos",
+        "Promover la certificación de los servicios turísticos de la comuna y la obtención de los sellos de reconocimiento existentes",
+        "Establecer auditoría anual por tercero independiente y caducidad del sello ante incumplimiento",
+        "Reducir las malas prácticas en los puntos críticos (captación agresiva, sobreprecio y servicio deficiente) mediante fiscalización programada"],
+  nat:["NOR","GES"],emp:"Toda la comuna",resp:"Turismo, DIDEL, Fiscalización",
+  ip:"N° de establecimientos con sello de calidad vigente, por nivel",
+  ir:"% de satisfacción del visitante con el servicio en puntos turísticos críticos (encuesta del visitante)"},
+ {le:5,c:2,n:"2-2",t:"Santiago Turismo Aprende",p:"D",
+  obj:"Elevar el estándar de atención al visitante mediante la formación del personal que ya trabaja en la cadena de servicio turístico de la comuna (alojamiento, gastronomía, comercio, transporte y personal municipal de atención) en el conocimiento del destino Santiago y sus estándares locales, como complemento de la formación general de SERNATUR.",
+  acts:["Diseñar el ciclo de capacitaciones, sin repetir los contenidos generales de Aprende Turismo, y dejarlo disponible para las demás iniciativas formativas del plan",
+        "Implementar capacitaciones presenciales y en terreno para personal turístico y municipal, adaptadas a sus jornadas laborales y formación a medida",
+        "Establecer una ruta formativa progresiva, reconociendo Aprende Turismo y SENCE como nivel básico y la certificación de Santiago como nivel avanzado"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"Turismo, DIDEL",
+  ip:"N° de cupos de formación ofrecidos por año en la plataforma",
+  ir:"N° de personas certificadas por año (tasa de finalización como variable de gestión; registros de la plataforma)"},
+ {le:5,c:3,n:"3-1",t:"Registro de emprendimiento turístico barrial",p:"D",
+  obj:"Formalizar y visibilizar a los emprendedores barriales como parte oficial de la oferta del destino, con acceso a circuitos y canales de comercialización municipales.",
+  acts:["Formalizar un registro oficial de emprendimiento turístico barrial con requisitos y beneficios definidos",
+        "Integrar el registro a los circuitos oficiales, al Pase Santiago y a la plataforma de servicios al visitante"],
+  nat:["GES","PRG"],emp:"Toda la comuna",resp:"DIDEL, Turismo",
+  ip:"N° de emprendimientos inscritos en el registro oficial",
+  ir:"% de emprendimientos registrados integrados a circuitos oficiales o canales de comercialización municipal (registros de circuitos)"},
+ {le:5,c:3,n:"3-2",t:"Fortalecimiento y financiamiento de emprendedores",p:"P",
+  obj:"Fortalecer el desarrollo de los emprendimientos turísticos locales mediante mentoría, articulación institucional y acceso a financiamiento adecuado a su escala.",
+  acts:["Implementar un programa de mentoría turística barrial que conecte emprendedores con operadores consolidados",
+        "Crear un plan de articulación de la oferta de certificación y digitalización de emprendimientos junto a organismos públicos",
+        "Gestionar una línea de microfinanciamiento y subsidios para mejora, certificación y digitalización de emprendimientos sin acceso a banca tradicional"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"DIDEL",
+  ip:"N° de emprendimientos con mentoría o financiamiento otorgado por año",
+  ir:"Tasa de supervivencia a 24 meses de los emprendimientos apoyados (%; seguimiento del programa)"},
+ {le:5,c:4,n:"4-1",t:"Comunidades anfitrionas",p:"D",
+  obj:"Convertir a los residentes de los sectores emergentes en gestores y beneficiarios del desarrollo turístico de sus barrios, mediante formación, certificación como guías barriales y apoyo directo.",
+  acts:["Certificar y formar a vecinos y representantes de cada sector como guías multilingües con identidad territorial y capacidad de mediación cultural, incorporando a personas mayores, jóvenes y migrantes",
+        "Desarrollar un programa de transferencia de herramientas tecnológicas para que el pequeño comercio y los hostales incorporen sistemas de reserva, pagos digitales y recorridos virtuales",
+        "Entregar becas y apoyo financiero directo a artesanos, músicos y creadores para potenciar la transmisión de tradiciones locales"],
+  nat:["PRG"],emp:"Toda la comuna",resp:"Turismo, DIDEL, Cultura y Patrimonio",
+  ip:"N° de guías barriales certificados por sector territorial",
+  ir:"% de guías certificados que se mantiene activo a los 12 meses (con servicios prestados; registro de guías)"}
+];
+// f: H Habilitante, F Profundización, C Continuidad, O Oportunidad
+const COMP = [
+ {id:"1.1",le:1,t:"Laboratorio de narrativas digitales Santiago",nat:"PRG",f:"F",link:["1-1-1"],
+  obj:"Instalar una capacidad permanente de producción de contenido digital co-creado con residentes, emprendedores y agentes culturales, que sostenga la presencia del destino en canales sociales con narrativas auténticas y frecuencia constante.",
+  acts:["Conformar un equipo editorial mixto (municipal y comunitario) con calendario de publicación y línea editorial definida","Capacitar a 60 residentes y emprendedores en producción de contenido audiovisual breve y narrativa de destino","Producir y distribuir contenido semanal en canales oficiales, midiendo alcance y conversión por sector territorial"],
+  v:"Sistema de Marca Santiago, cuyo banco de contenidos audiovisuales es una producción puntual. Esta iniciativa instala la capacidad de producción continua que sostiene la presencia digital del destino en el tiempo."},
+ {id:"1.2",le:1,t:"Tienda turística local",nat:"PRG",f:"F",link:["5-3-1"],
+  obj:"Promover la cultura e identidad local mediante un canal permanente de comercialización de productos oficiales de la marca comunal y barrial, que genere ingresos propios y conecte a emprendedores con visitantes.",
+  acts:["Crear un canal de venta físico y digital de productos locales y souvenirs con identidad barrial y comunal","Definir el modelo de negocio, la política de márgenes y el mecanismo de incorporación de proveedores locales","Articular la tienda con el registro de emprendimiento turístico barrial y con los circuitos oficiales"],
+  v:"El registro formaliza y visibiliza a los emprendedores; la tienda les entrega el canal de venta que convierte esa visibilidad en ingreso."},
+ {id:"1.3",le:1,t:"Pase Santiago",nat:"PRG",f:"H",link:["5-3-1"],
+  obj:"Implementar una herramienta integrada de movilidad, cultura y gastronomía que fomente la permanencia, el consumo diversificado y la distribución territorial de los flujos de visitantes.",
+  acts:["Diseñar un instrumento integrado de movilidad, cultura y gastronomía con capa de gamificación para fidelización","Incorporar un incentivo tarifario diferenciado para atractivos y operadores de los sectores poniente y sur","Suscribir convenios con museos, operadores de transporte y establecimientos gastronómicos adherentes"],
+  v:"Añade al Registro de Emprendimiento Turístico Barrial una faceta operativa de diferenciación y fidelización."},
+ {id:"1.4",le:1,t:"Santiago en la educación",nat:"PRG",f:"F",link:["1-3-2"],
+  obj:"Posicionar a Santiago como destino obligado del turismo escolar nacional, articulando la oferta patrimonial con los aprendizajes esperados del currículum nacional.",
+  acts:["Fortalecer los recorridos guiados y alinearlos con objetivos de aprendizaje del currículum nacional","Elaborar material pedagógico de apoyo para docentes y establecer un sistema de reserva escolar en línea","Suscribir convenios con sostenedores educacionales regionales y de otras regiones del país"],
+  v:"La Plataforma Santiago Virtual opera como visibilización para el segmento escolar; esta iniciativa convierte ese interés en visitas efectivas con respaldo curricular."},
+ {id:"2.1",le:2,t:"Realidad aumentada patrimonial",nat:"INV",f:"F",link:["3-3-1"],
+  obj:"Difundir el patrimonio histórico añadiendo una capa digital de interpretación sobre los atractivos de mayor jerarquía, haciendo visible lo que ya no existe y profundizando el vínculo con el patrimonio.",
+  acts:["Desarrollar una aplicación o plataforma de realidad aumentada patrimonial con contenido validado históricamente","Instalar señalética inteligente (QR / RA) en los sitios priorizados del catastro comunal","Implementar un piloto en cuatro hitos de mayor jerarquía y evaluar uso antes de escalar"],
+  v:"Toma los sitios priorizados del catastro técnico y añade una capa interpretativa digital sobre atractivos ya catastrados."},
+ {id:"2.2",le:2,t:"Patrimonio en movimiento",nat:"INV",f:"O",link:["3-3-2"],
+  obj:"Recuperar y poner en operación medios de transporte histórico de la comuna como productos turísticos emblemáticos, garantizando accesibilidad universal y sostenibilidad económica.",
+  acts:["Recuperar el tranvía histórico como producto turístico que conecte el centro histórico con el eje patrimonial de Quinta Normal"],
+  v:"Se vincula con la concesión de inmuebles municipales bajo el mismo esquema de financiamiento mixto."},
+ {id:"2.3",le:2,t:"Ruta del patrimonio industrial y ferroviario",nat:"PRG",f:"F",link:["2-6-1"],
+  obj:"Poner en valor el legado industrial y ferroviario de los sectores poniente y sur como producto turístico diferenciador, activando inmuebles y conjuntos hoy ausentes de la oferta comunal.",
+  acts:["Elaborar un inventario técnico del patrimonio industrial comunal con estado de conservación, propiedad y potencial de activación","Diseñar un circuito interpretado que articule los barrios con pasado ferroviario con relato y señalética propia","Gestionar convenios de uso con propietarios privados y postular las obras de habilitación a financiamiento regional"],
+  v:"Aporta el contenido patrimonial industrial y ferroviario que da argumento turístico a los microdestinos de poniente y sur."},
+ {id:"2.4",le:2,t:"Mejoramiento integral de mercados",nat:"INV",f:"H",link:["2-2-1"],
+  obj:"Elevar los mercados tradicionales de Santiago al estándar de producto turístico gastronómico, resguardando simultáneamente su función de abastecimiento para la población residente.",
+  acts:["Articular con la administración de los mercados Franklin, Central y Vega Poniente mejoras de infraestructura, señalética y capacitación","Establecer un esquema de uso horario diferenciado que compatibilice el abastecimiento local con los circuitos turísticos guiados"],
+  v:"El objetivo general del componente Gastronomía compromete resguardar la función local de los mercados."},
+ {id:"2.5",le:2,t:"Activación cultural del espacio público",nat:"PRG",f:"C",link:["2-3-1"],
+  obj:"Activar el espacio público como escenario cultural permanente mediante programación periódica que amplíe la permanencia del visitante y el consumo local.",
+  acts:["Expandir un programa tipo «Puertas Abiertas» como activación periódica en todos los sectores de la comuna","Desarrollar jornadas musicales regulares en espacios públicos turísticos","Implementar ferias de industrias creativas para visibilizar y comercializar creaciones locales en sectores territoriales priorizados"],
+  v:"El calendario unificado de actividades artísticas se alimenta de esta programación. Expande un programa que tiene versiones exitosas en el territorio comunal."},
+ {id:"2.6",le:2,t:"Ruta de las migraciones",nat:"PRG",f:"F",link:["2-3-1"],
+  obj:"Poner en valor la diversidad migrante de la comuna como activo turístico diferenciador, mediante un circuito interpretado de gastronomía, comercio e historias de vida co-construido con las comunidades.",
+  acts:["Realizar un levantamiento participativo con organizaciones de comunidades migrantes residentes en la comuna","Diseñar un circuito interpretado con protocolo de resguardo cultural y consentimiento de las comunidades participantes","Formar mediadores culturales provenientes de las propias comunidades como guías del circuito"],
+  v:"Incorpora al circuito comunal una dimensión poco abordada y que diferencia a la comuna de otros destinos."},
+ {id:"2.7",le:2,t:"Circuitos nocturnos patrimoniales",nat:"INV",f:"F",link:["2-4-1","3-1-2"],
+  obj:"Habilitar circuitos peatonales nocturnos con iluminación artística en el centro histórico y los barrios de mayor potencial, condicionados a la operación previa del sistema de seguridad nocturna.",
+  acts:["Habilitar iluminación artística en recorridos peatonales del centro histórico y en puntos icónicos de la comuna","Definir los trazados, horarios y capacidad de carga de cada circuito en coordinación con seguridad comunitaria"],
+  v:"Aporta el recorrido peatonal que conecta los atractivos en horario extendido. Depende además del sistema de seguridad nocturna de la Guardia Turística Municipal."},
+ {id:"2.8",le:2,t:"Turismo de bienestar",nat:"GES",f:"F",link:["2-5-1"],
+  obj:"Estructurar una oferta de turismo de bienestar urbano que capture el segmento wellness, articulando oferta privada existente y espacios públicos de la comuna.",
+  acts:["Articular una oferta de bienestar urbano con operadores privados"],
+  v:"Los corredores habilitan la infraestructura de bienestar; esta iniciativa articula la oferta privada que la convierte en producto comercializable."},
+ {id:"2.9",le:2,t:"Ruta panorámica de cordilleras",nat:"INV",f:"F",link:["2-4-2"],
+  obj:"Vincular a la comuna con el atractivo cordillerano mediante miradores habilitados y rutas visuales que capitalicen la singularidad geográfica del destino.",
+  acts:["Promover la habilitación de miradores en puntos priorizados de la comuna con interpretación del paisaje y accesibilidad universal"],
+  v:"Habilita los miradores que dan sustento físico a la promesa de vistas panorámicas de las terrazas HORECA."},
+ {id:"3.1",le:3,t:"Activación urbana preventiva",nat:"PRG",f:"H",link:["3-1-4"],
+  obj:"Reducir la inseguridad objetiva y percibida a través de la ocupación activa del espacio público, la iluminación y el urbanismo táctico en zonas turísticas priorizadas.",
+  acts:["Programar presencia de artistas y emprendedores en espacios públicos priorizados","Instalar iluminación de espacios públicos en zonas turísticas como estrategia preventiva"],
+  v:"El estándar comunal de «zona turística segura» exige iluminación y presencia en el espacio público: esta iniciativa entrega ambas condiciones."},
+ {id:"3.2",le:3,t:"Movilidad activa turística",nat:"INV",f:"O",link:["2-5-1"],
+  obj:"Promover la movilidad activa como parte de la experiencia turística, integrando bicicleta pública y ejes peatonales señalizados.",
+  acts:["Concesionar un sistema de bicicletas públicas funcional al turismo e integrado al Pase Santiago","Transformar ejes priorizados en paseos peatonales con información y señalética turística"],
+  v:"El sistema de bicicleta pública se integra a la red de ciclovías de los corredores activos y al Pase Santiago."},
+ {id:"3.3",le:3,t:"Sello Santiago Accesible",nat:"NOR",f:"F",link:["3-4-1"],
+  obj:"Certificar y visibilizar los atractivos y operadores que cumplen estándares de accesibilidad, con auditoría periódica y caducidad del sello ante incumplimiento.",
+  acts:["Definir los estándares de accesibilidad y los criterios de certificación del Sello Santiago Accesible","Otorgar el sello a atractivos y operadores certificados y visibilizarlos en los canales oficiales","Establecer un régimen de auditoría periódica por tercero independiente con caducidad del sello ante incumplimiento"],
+  v:"El objetivo general del componente compromete certificar con auditoría periódica; esta iniciativa lo implementa."},
+ {id:"3.4",le:3,t:"Turismo inclusivo por segmentos",nat:"PRG",f:"F",link:["3-4-1"],
+  obj:"Estructurar productos turísticos con foco en inclusión, dirigidos a segmentos con necesidades y patrones de consumo específicos.",
+  acts:["Desarrollar circuitos turísticos con guías especializados para personas con discapacidad visual, motriz y auditiva","Promover productos turísticos específicos para la comunidad LGBTIQ+ en entornos seguros y validados","Incorporar un protocolo de cuidados para visitantes con niños, personas mayores y personas cuidadoras"],
+  v:"Una vez abordadas las barreras físicas, estructura los productos que hacen efectivo el acceso para segmentos con necesidades específicas."},
+ {id:"3.5",le:3,t:"Normativa ambiental comunal",nat:"NOR",f:"H",link:["4-3-1"],
+  obj:"Normar la inclusión de criterios ambientales obligatorios en el desarrollo del turismo comunal.",
+  acts:["Incorporar criterios de sustentabilidad ambiental obligatorios en los proyectos turísticos municipales","Actualizar la normativa comunal incorporando estándares ambientales exigibles"],
+  v:"Aporta el capítulo ambiental de la normativa municipal específica de turismo."},
+ {id:"3.6",le:3,t:"Certificación Sello S",nat:"PRG",f:"F",link:["5-2-1"],
+  obj:"Promover el incremento de estándares de sostenibilidad en los servicios turísticos mediante acompañamiento técnico al proceso de certificación nacional de turismo sustentable.",
+  acts:["Acompañar a los operadores turísticos en el proceso de certificación Sello S","Establecer incentivos municipales de visibilidad y acceso preferente a circuitos para los operadores certificados"],
+  v:"Acompaña a los mismos operadores del sello comunal hacia la certificación nacional de sustentabilidad, evitando que ambos sellos operen como exigencias desconectadas."},
+ {id:"3.7",le:3,t:"Corredores verdes y arbolado",nat:"INV",f:"F",link:["2-5-1"],
+  obj:"Incrementar la cobertura vegetal como inversión en calidad del paisaje, confort climático y valor ambiental del destino, priorizando los ejes turísticos y peatonales.",
+  acts:["Diseñar e implementar proyectos que aumenten la cobertura vegetal y el arbolado en sectores turísticos priorizados"],
+  v:"Aporta la cobertura vegetal que da contenido a la denominación de corredores verdes."},
+ {id:"3.8",le:3,t:"Monitoreo ambiental del destino",nat:"EST",f:"H",link:["4-2-1"],
+  obj:"Medir sistemáticamente la huella ambiental de la actividad turística comunal como insumo de gestión y como requisito de coherencia con la Estrategia Nacional de Turismo Sostenible 2035.",
+  acts:["Definir el set de indicadores ambientales del destino (residuos, agua, energía, ruido y huella de carbono asociada)","Implementar la medición periódica y publicar los resultados en el observatorio comunal"],
+  v:"Aporta la dimensión ambiental del cuadro de mando comunal."},
+ {id:"3.9",le:3,t:"Acogida y primer contacto",nat:"INV",f:"H",link:["3-2-4"],
+  obj:"Promover que el visitante reciba una acogida estandarizada, cálida y en su idioma desde el primer punto de contacto en la comuna.",
+  acts:["Habilitar módulos de información y bienvenida (sanitarios, descanso, hidratación, sombra y wifi) en los puntos de acceso intermodal de mayor afluencia","Estandarizar los protocolos de atención en los módulos de bienvenida","Incorporar en cada módulo un componente de oferta cultural y artesanal local de rotación periódica","Capacitar a transportistas públicos y privados en hospitalidad y seguridad para el visitante"],
+  v:"Construye la infraestructura del estándar de servicios por nivel de nodo y de los puntos de información."},
+ {id:"3.10",le:3,t:"Manual de señalética turística",nat:"INV",f:"H",link:["3-2-4","1-1-1"],
+  obj:"Facilitar la orientación y el descubrimiento autónomo de la comuna mediante un sistema unificado de señalética turística coherente con la arquitectura de marca.",
+  acts:["Diseñar un manual de señalética turística unificado para toda la comuna, articulado con el manual de marca","Implementar la señalética en los sectores priorizados, incorporando los sectores poniente y sur en la primera etapa"],
+  v:"Toma la arquitectura de marca y debe coordinarse con la señalética e hitos de los Planes de Identidad Barrial para no duplicar intervención."},
+ {id:"3.11",le:3,t:"Herramientas de interpretación digital autónoma",nat:"INV",f:"F",link:["2-3-1"],
+  obj:"Fortalecer la autonomía del visitante en la comprensión del entorno y la cultura local mediante recursos de interpretación digital de alta calidad y multilingües.",
+  acts:["Desarrollar audioguías y podcast multilingües de alta calidad para los circuitos oficiales","Desarrollar una capa de realidad aumentada sobre los atractivos de mayor jerarquía, articulada con la iniciativa 2.1"],
+  v:"Su capa de realidad aumentada se superpone con Realidad Aumentada Patrimonial (2.1): ambas deben resolverse como un solo desarrollo."},
+ {id:"3.12",le:3,t:"Red de puntos de hidratación y descanso",nat:"INV",f:"H",link:["3-2-4"],
+  obj:"Instalar una red de puntos de servicio básico en los corredores peatonales turísticos que eleve la satisfacción del visitante y la calidad de vida del residente con baja inversión unitaria.",
+  acts:["Definir la localización de los puntos sobre la base del análisis de flujos peatonales y de la red de nodos","Instalar puntos con agua potable, sombra, asientos, carga solar y señalética integrada","Establecer el protocolo de mantención y reposición con responsable y frecuencia definidos"],
+  v:"Completa el estándar de servicios de los nodos con la infraestructura de descanso e hidratación."},
+ {id:"4.1",le:4,t:"Capacidades y recursos para la gestión",nat:"GES",f:"H",link:["4-1-1","4-2-1"],
+  obj:"Asegurar las capacidades técnicas y los recursos financieros necesarios para la implementación del PLADETUR, con plan de inversiones por línea y control de gestión asociado.",
+  acts:["Crear un plan de inversiones por línea estratégica con fuentes diversificadas y cronograma de desembolso","Implementar mecanismos de control de gestión para el seguimiento del plan con reporte semestral al Concejo Municipal","Dotar a la unidad de turismo de profesionales especializados en inteligencia de destino, producto, MICE y gobernanza barrial"],
+  v:"Entrega el plan de inversiones, el control de gestión y la dotación especializada que toda la cartera necesita para ejecutarse."},
+ {id:"4.2",le:4,t:"Pacto de corresponsabilidad turística",nat:"NOR",f:"H",link:["4-1-2"],
+  obj:"Formalizar en un instrumento único los compromisos de estándar y conducta de los actores públicos, privados y comunitarios del destino, con mecanismos de verificación y consecuencias ante incumplimiento.",
+  acts:["Redactar el pacto con los compromisos mínimos por tipo de actor y los mecanismos de verificación asociados","Suscribir el pacto con los actores de la mesa permanente y publicar el registro de adherentes","Evaluar anualmente el cumplimiento y vincular su resultado al acceso a beneficios municipales de promoción"],
+  v:"Sustituye la lógica de convenios bilaterales por un estándar común y comparable, con consecuencias asociadas al incumplimiento."},
+ {id:"4.3",le:4,t:"Fondo de innovación turística comunal",nat:"GES",f:"F",link:["4-1-1"],
+  obj:"Disponer de un instrumento concursable permanente que financie proyectos exploratorios de producto, tecnología y sostenibilidad, permitiendo al destino adaptarse a cambios de demanda dentro del horizonte del plan.",
+  acts:["Definir las bases, los criterios de evaluación y el comité técnico de adjudicación del fondo","Ejecutar convocatorias anuales con rendición y evaluación ex post de los proyectos adjudicados","Escalar a programa permanente las iniciativas piloto que acrediten resultados"],
+  v:"Se asocia al modelo de ingresos y gobierno corporativo de la agencia. Permite incorporar iniciativas no previstas sin reformular el plan."},
+ {id:"4.4",le:4,t:"Monitoreo de reputación",nat:"PRG",f:"H",link:["4-3-2","1-3-1"],
+  obj:"Proteger la reputación turística de la comuna y anticipar el deterioro de la convivencia residencial mediante monitoreo sistemático y protocolos de respuesta.",
+  acts:["Implementar un sistema de monitoreo de redes sociales y medios sobre la reputación del destino","Establecer un protocolo de respuesta rápida ante incidentes de reputación digital"],
+  v:"Mide el efecto del turismo sobre la calidad de vida en barrios residenciales y aporta la medición de reputación que la campaña de seguridad del destino necesita."},
+ {id:"4.5",le:4,t:"Investigación aplicada en turismo",nat:"EST",f:"F",link:["4-2-2"],
+  obj:"Generar conocimiento técnico propio sobre el comportamiento del visitante, el impacto económico territorial y la innovación en experiencias, mediante convenios estables con instituciones académicas.",
+  acts:["Suscribir convenios marco de investigación aplicada con instituciones de educación superior","Definir una agenda anual de investigación priorizada por la mesa permanente","Publicar los resultados en el observatorio comunal e incorporarlos a la actualización del plan"],
+  v:"El observatorio publica datos pero no produce análisis; los convenios académicos generan ese conocimiento a costo marginal."},
+ {id:"5.1",le:5,t:"Pasaporte cultural residente",nat:"PRG",f:"F",link:["5-1-1"],
+  obj:"Crear un instrumento de acceso preferente al patrimonio y a la oferta turística comunal para la población residente, que materialice el principio de beneficio local del turismo.",
+  acts:["Diseñar e implementar un pasaporte cultural residente como credencial de acceso preferente articulado con la oferta turística","Negociar con operadores y espacios culturales los beneficios asociados y su vigencia","Distribuir el instrumento priorizando los sectores con menor acceso histórico a la oferta cultural"],
+  v:"El programa entrega rutas diferenciadas por perfil; el pasaporte transforma ese acceso puntual en un derecho permanente y verificable."},
+ {id:"5.2",le:5,t:"Hecho en Santiago",nat:"PRG",f:"F",link:["5-3-1"],
+  obj:"Crear un canal digital y físico oficial de comercialización con curatoría de origen, que conecte a creadores y artesanos de la comuna con los visitantes y garantice trazabilidad del producto local.",
+  acts:["Definir el estándar de admisión con curatoría de origen que excluya la reventa y acredite producción local","Desarrollar el canal digital e integrarlo con la tienda turística local y los módulos de bienvenida","Implementar un programa de acompañamiento comercial y logístico para los creadores admitidos"],
+  v:"Agrega curatoría de origen y trazabilidad sobre el registro. Debe resolverse junto con la Tienda Turística Local (1.2): son dos canales oficiales de comercialización."},
+ {id:"5.3",le:5,t:"Fondo de innovación social turística",nat:"GES",f:"F",link:["5-3-2"],
+  obj:"Financiar la creación de cooperativas y organizaciones comunitarias que operen experiencias turísticas en los sectores poniente y sur, asegurando que el derrame económico permanezca en el territorio.",
+  acts:["Diseñar el instrumento con criterios de elegibilidad territorial y acompañamiento técnico obligatorio","Ejecutar convocatorias anuales priorizando organizaciones de los sectores poniente y sur","Medir el derrame económico local generado y reportarlo en el observatorio comunal"],
+  v:"Habilita la escala asociativa, más adecuada para operar experiencias en barrios de baja densidad comercial."},
+ {id:"5.4",le:5,t:"Formación continua del equipo técnico",nat:"PRG",f:"C",link:["4-2-1","4-1-1"],
+  obj:"Fortalecer al equipo técnico municipal de turismo mediante un plan anual de formación con horas mínimas garantizadas y contenidos alineados a las brechas del plan.",
+  acts:["Diseñar e implementar un plan anual de formación con horas mínimas garantizadas para el equipo técnico","Incorporar pasantías o intercambios técnicos con destinos urbanos de referencia en la región"],
+  v:"Función municipal permanente que el plan ordena y dota de metas: sin equipo formado, ninguna de las capacidades técnicas que el plan supone está disponible."},
+ {id:"5.5",le:5,t:"Programa de gestores turísticos barriales",nat:"PRG",f:"H",link:["4-1-2"],
+  obj:"Formar anualmente un cuerpo de gestores turísticos provenientes de toda la comuna que operen como contraparte técnica local de las estructuras de gobernanza barrial, asegurando capacidad de implementación territorial del plan.",
+  acts:["Diseñar la malla formativa y el proceso de selección con criterios de equidad territorial y de género","Ejecutar cohortes anuales con formación teórica y práctica vinculada a proyectos reales del plan","Vincular a los egresados a las estructuras de gobernanza barrial y a los programas municipales de turismo"],
+  v:"Sin gestores formados, las estructuras de gobernanza autónoma de los seis sectores quedan sin contraparte técnica."},
+ {id:"5.6",le:5,t:"Inclusión y pluralidad en el emprendimiento turístico",nat:"NOR",f:"F",link:["5-3-2","5-2-2"],
+  obj:"Incorporar el enfoque de género como criterio transversal en los instrumentos de fomento y formación del plan, removiendo las barreras de acceso que afectan la participación de mujeres en la cadena de valor turística.",
+  acts:["Establecer una meta de participación femenina en los instrumentos de fomento y formación del plan","Implementar medidas de apoyo al cuidado durante las actividades de capacitación y mentoría","Reportar anualmente los indicadores desagregados por sexo en el observatorio comunal"],
+  v:"Establece un criterio transversal de acceso sobre los instrumentos de fomento y formación."}
+];
+const PROG=[["1-1-1", "A1", "Manual de marca y difusión con actores", "EST", "Turismo, Comunicaciones", "11100000000"], ["1-1-1", "A2", "Banco de contenidos audiovisuales liberado", "EST", "Turismo, Comunicaciones", "11100000000"], ["1-1-1", "A3", "Protocolo de licencia de uso de marca", "GES", "Turismo, Comunicaciones", "11100000000"], ["1-1-1", "A4", "Red de embajadores digitales", "PRG", "Turismo, Comunicaciones", "00011111111"], ["1-1-2", "A1", "Talleres barriales de atributos turísticos", "PRG", "Turismo, SECPLAN, Cultura y Patrimonio", "11111110000"], ["1-1-2", "A2", "Señalética e hitos identitarios", "INV", "Turismo, SECPLAN, Cultura y Patrimonio", "00011100000"], ["1-1-2", "A3", "Base documental y capacitación de actores", "GES", "Turismo, SECPLAN, Cultura y Patrimonio", "00011111111"], ["1-2-1", "A1", "Matriz de priorización de segmentos y mercados", "EST", "Turismo", "11100000000"], ["1-2-1", "A2", "Perfiles de demanda por segmento", "EST", "Turismo", "11100000000"], ["1-2-1", "A3", "Regla de asignación del presupuesto de promoción", "GES", "Turismo", "11100000000"], ["1-2-2", "A1", "Articulación con organismo captador de congresos", "GES", "Turismo, Admin. Municipal", "11111111111"], ["1-2-2", "A2", "Inmuebles patrimoniales habilitados como venues", "INV", "Turismo, Admin. Municipal", "00000011111"], ["1-2-2", "A3", "Catálogo oficial de espacios para eventos", "GES", "Turismo, Admin. Municipal", "11100000000"], ["1-3-1", "A1", "Kit integral de campaña", "EST", "Comunicaciones, Turismo, Gabinete", "11100000000"], ["1-3-1", "A2", "Presencia en ferias internacionales", "GES", "Comunicaciones, Turismo, Gabinete", "11111111111"], ["1-3-1", "A3", "Campaña de reputación de seguridad", "PRG", "Comunicaciones, Turismo, Gabinete", "11111110000"], ["1-3-2", "A1", "Plataforma de visitas virtuales multilingüe", "INV", "Comunicaciones, Turismo", "11100000000"], ["1-3-2", "A2", "Integración con reservas y canales oficiales", "GES", "Comunicaciones, Turismo", "00011111111"], ["2-1-1", "A1", "Piloto de experiencias en cuatro barrios de autor", "PRG", "Turismo", "11100000000"], ["2-1-1", "A2", "Evaluación y réplica del piloto", "GES", "Turismo", "00011100000"], ["2-2-1", "A1", "Festivales gastronómicos de barrio", "PRG", "Turismo, Cultura y Patrimonio", "11111111111"], ["2-2-1", "A2", "Circuito anual de ferias gastronómicas y enológicas", "PRG", "Turismo, Cultura y Patrimonio", "00011111111"], ["2-2-1", "A3", "Ruta gastronómica oficial", "PRG", "Turismo, Cultura y Patrimonio", "11111111111"], ["2-3-1", "A1", "Circuito de visita múltiple de museos municipales", "PRG", "Cultura y Patrimonio, Turismo, SECPLAN", "11111111111"], ["2-3-1", "A2", "Calendario unificado de actividades artísticas", "GES", "Cultura y Patrimonio, Turismo, SECPLAN", "11100000000"], ["2-3-1", "A3", "Recorrido temático de arte y cultura", "PRG", "Cultura y Patrimonio, Turismo, SECPLAN", "11111111111"], ["2-4-1", "A1", "Piloto de horario extendido en museos", "PRG", "Cultura y Patrimonio, Turismo", "11100000000"], ["2-4-1", "A2", "Evaluación del piloto antes de escalar", "GES", "Cultura y Patrimonio, Turismo", "11100000000"], ["2-4-2", "A1", "Difusión de terrazas y azoteas", "PRG", "Comunicaciones, Turismo", "11100000000"], ["2-4-2", "A2", "Mapa virtual de terrazas y vistas panorámicas", "GES", "Comunicaciones, Turismo", "11100000000"], ["2-5-1", "A1", "Corredores verdes deportivos y de bienestar", "INV", "SECPLAN, DOM, Tránsito, Operaciones y Servicios Urbanos", "00011111100"], ["2-5-1", "A2", "Rutas temáticas de cicloturismo urbano", "PRG", "SECPLAN, DOM, Tránsito, Operaciones y Servicios Urbanos", "00000011111"], ["2-5-2", "A1", "Eventos deportivos con sello comunal", "PRG", "Turismo, Deporte, Gabinete, DIDEL", "11111111111"], ["2-5-2", "A2", "Semana anual de turismo activo", "PRG", "Turismo, Deporte, Gabinete, DIDEL", "11111000000"], ["2-5-2", "A3", "Paquetes turísticos asociados a eventos", "GES", "Turismo, Deporte, Gabinete, DIDEL", "00011100000"], ["2-6-1", "A1", "Programa de barrios turísticos", "PRG", "Turismo", "11111111111"], ["2-6-1", "A2", "Piloto de circuito en sector sur", "PRG", "Turismo", "00011100000"], ["2-6-1", "A3", "Piloto en sector poniente y evaluación comparada", "PRG", "Turismo", "00011100000"], ["2-6-2", "A1", "Estándar de certificación de experiencias cotidianas", "PRG", "Turismo, DIDEL", "11100000000"], ["2-6-2", "A2", "Formación y certificación de 100 residentes anfitriones", "PRG", "Turismo, DIDEL", "11100000000"], ["2-6-2", "A3", "Difusión de experiencias certificadas", "PRG", "Turismo, DIDEL", "11100000000"], ["2-6-3", "A1", "Catastro de servicios de alto valor", "EST", "Turismo, DIDEL", "00011100000"], ["2-6-3", "A2", "Paquetes de estadía con operadores", "GES", "Turismo, DIDEL", "00011100000"], ["3-1-1", "A1", "Protocolo único de seguridad turística", "NOR", "Prevención y Seguridad Comunitaria, Turismo", "11100000000"], ["3-1-1", "A2", "Sistema de registro y respuesta a incidentes", "GES", "Prevención y Seguridad Comunitaria, Turismo", "11100000000"], ["3-1-2", "A1", "Guardia turística municipal multilingüe", "PRG", "Prevención y Seguridad Comunitaria, Turismo", "11100000000"], ["3-1-2", "A2", "Sistema de seguridad nocturna", "PRG", "Prevención y Seguridad Comunitaria, Turismo", "11100000000"], ["3-1-2", "A3", "Capacitación de la guardia en acogida y emergencias", "PRG", "Prevención y Seguridad Comunitaria, Turismo", "11100000000"], ["3-1-3", "A1", "Capacitación en detección y denuncia", "PRG", "DIDECO, Turismo", "11100000000"], ["3-1-3", "A2", "Adhesión al código de conducta nacional", "GES", "DIDECO, Turismo", "11100000000"], ["3-1-4", "A1", "Estándar comunal de zona turística segura", "NOR", "Prevención y Seguridad Comunitaria, Turismo, Comunicaciones", "11100000000"], ["3-1-4", "A2", "Comunicación de resultados verificados", "GES", "Prevención y Seguridad Comunitaria, Turismo, Comunicaciones", "11100000000"], ["3-2-1", "A1", "Paraderos diferenciados de transporte turístico", "INV", "Tránsito", "00011100000"], ["3-2-1", "A2", "Registro de operadores de transporte turístico", "NOR", "Tránsito", "11100000000"], ["3-2-2", "A1", "Wifi gratuito en zonas turísticas", "INV", "SECPLAN", "11100000000"], ["3-2-3", "A1", "Bus turístico comunal gratuito", "INV", "Tránsito, Turismo", "11100000000"], ["3-2-3", "A2", "Guías municipales a bordo", "PRG", "Tránsito, Turismo", "00011111111"], ["3-2-3", "A3", "Evaluación del piloto de bus", "GES", "Tránsito, Turismo", "00011111111"], ["3-2-4", "A1", "Jerarquía de nodos turísticos", "EST", "SECPLAN, Turismo", "11100000000"], ["3-2-4", "A2", "Estándar de servicios por nivel de nodo", "GES", "SECPLAN, Turismo", "00011100000"], ["3-2-4", "A3", "Puntos de información turística en nodos", "INV", "SECPLAN, Turismo", "00011100000"], ["3-3-1", "A1", "Catastro técnico de atractivos críticos", "EST", "Turismo, Cultura y Patrimonio", "11100000000"], ["3-3-1", "A2", "Monitoreo digital de estándares por atractivo", "EST", "Turismo, Cultura y Patrimonio", "11100000000"], ["3-3-1", "A3", "Índice de activación turística por atractivo", "EST", "Turismo, Cultura y Patrimonio", "11100000000"], ["3-3-2", "A1", "Calendario de mantención preventiva", "EST", "Operaciones y Servicios Urbanos, Cultura y Patrimonio, SECPLAN", "11100000000"], ["3-3-2", "A2", "Financiamiento para atractivos críticos", "INV", "Operaciones y Servicios Urbanos, Cultura y Patrimonio, SECPLAN", "00011111100"], ["3-3-2", "A3", "Concesión de inmuebles municipales", "INV", "Operaciones y Servicios Urbanos, Cultura y Patrimonio, SECPLAN", "00011111100"], ["3-3-2", "A4", "Programa “Adopta un Monumento”", "PRG", "Operaciones y Servicios Urbanos, Cultura y Patrimonio, SECPLAN", "00011111111"], ["3-4-1", "A1", "Diagnóstico de barreras de accesibilidad", "EST", "SECPLAN, DOM, Operaciones y Servicios Urbanos, DIDECO", "00011100000"], ["3-4-1", "A2", "Intervenciones de accesibilidad universal", "INV", "SECPLAN, DOM, Operaciones y Servicios Urbanos, DIDECO", "00011111100"], ["3-5-1", "A1", "Piloto barrio basura cero", "PRG", "Operaciones y Servicios Urbanos, Medioambiente", "00011100000"], ["3-5-1", "A2", "Educación ambiental y protocolo de residuos", "PRG", "Operaciones y Servicios Urbanos, Medioambiente", "11111111111"], ["3-5-1", "A3", "Plan anual de limpieza de fachadas", "PRG", "Operaciones y Servicios Urbanos, Medioambiente", "11111111111"], ["3-5-1", "A4", "Estándar de limpieza por nivel de nodo", "EST", "Operaciones y Servicios Urbanos, Medioambiente", "11100000000"], ["4-1-1", "A1", "Corporación municipal mixta de turismo", "GES", "Turismo, Admin. Municipal, SECPLAN", "11100000000"], ["4-1-1", "A2", "Gobierno corporativo de la agencia", "GES", "Turismo, Admin. Municipal, SECPLAN", "11100000000"], ["4-1-1", "A3", "Modelo de ingresos de la agencia", "GES", "Turismo, Admin. Municipal, SECPLAN", "11100000000"], ["4-1-1", "A4", "Hub de coordinación y atención", "INV", "Turismo, Admin. Municipal, SECPLAN", "11111100000"], ["4-1-2", "A1", "Mesa permanente de coordinación turística", "GES", "Turismo, Admin. Municipal, Secretaría Municipal", "11111111111"], ["4-1-2", "A2", "Reglamento de funcionamiento de la mesa", "GES", "Turismo, Admin. Municipal, Secretaría Municipal", "11100000000"], ["4-1-2", "A3", "Articulación con SERNATUR, GORE y CORFO", "GES", "Turismo, Admin. Municipal, Secretaría Municipal", "11111111111"], ["4-1-2", "A4", "Convenios con metas y rendición de cuentas", "GES", "Turismo, Admin. Municipal, Secretaría Municipal", "11100000000"], ["4-1-2", "A5", "Gobernanzas autónomas en seis sectores", "GES", "Turismo, Admin. Municipal, Secretaría Municipal", "11100000000"], ["4-2-1", "A1", "Cuadro de mando del PLADETUR", "EST", "Turismo, SECPLAN", "11100000000"], ["4-2-1", "A2", "Frecuencia y responsable de reporte", "GES", "Turismo, SECPLAN", "11100000000"], ["4-2-1", "A3", "Umbrales de alerta y medidas correctivas", "GES", "Turismo, SECPLAN", "11100000000"], ["4-2-2", "A1", "Plataforma abierta de datos del destino", "EST", "Turismo, SECPLAN, Comunicaciones", "11100000000"], ["4-2-2", "A2", "Rediseño de web y redes de Turismo", "EST", "Turismo, SECPLAN, Comunicaciones", "11100000000"], ["4-2-2", "A3", "Agendamiento de tours en línea", "GES", "Turismo, SECPLAN, Comunicaciones", "11100000000"], ["4-3-1", "A1", "Distinción Comuna Turística SERNATUR", "GES", "SECPLAN, Turismo, D.A. Jurídica", "11100000000"], ["4-3-1", "A2", "Declaratoria ZOIT en sectores prioritarios", "GES", "SECPLAN, Turismo, D.A. Jurídica", "00011100000"], ["4-3-1", "A3", "Ordenanza municipal de turismo", "NOR", "SECPLAN, Turismo, D.A. Jurídica", "00011100000"], ["4-3-1", "A4", "Apartado turístico en plan de riesgos", "NOR", "SECPLAN, Turismo, D.A. Jurídica", "00011100000"], ["4-3-1", "A5", "Registro de viviendas de uso turístico", "NOR", "SECPLAN, Turismo, D.A. Jurídica", "00011100000"], ["4-3-2", "A1", "Planes de convivencia por barrio", "NOR", "DIDECO, D.A. Jurídica, Fiscalización, Prevención y Seguridad Comunitaria", "00011100000"], ["4-3-2", "A2", "Vigilancia de actividad nocturna residencial", "PRG", "DIDECO, D.A. Jurídica, Fiscalización, Prevención y Seguridad Comunitaria", "00011111111"], ["4-3-2", "A3", "Canal único de reclamos vecinales", "GES", "DIDECO, D.A. Jurídica, Fiscalización, Prevención y Seguridad Comunitaria", "00011111111"], ["5-1-1", "A1", "Rutas para escolares y jóvenes", "PRG", "DIDECO, Turismo", "11111111111"], ["5-1-1", "A2", "Rutas para personas mayores y familias", "PRG", "DIDECO, Turismo", "11111111111"], ["5-1-1", "A3", "Meta de cobertura y focalización territorial", "GES", "DIDECO, Turismo", "11111111111"], ["5-2-1", "A1", "Estándares mínimos en puntos críticos", "NOR", "Turismo, DIDEL, Fiscalización", "11100000000"], ["5-2-1", "A2", "Promoción de certificaciones y sellos existentes", "PRG", "Turismo, DIDEL, Fiscalización", "11100000000"], ["5-2-1", "A3", "Auditoría anual y caducidad del sello", "GES", "Turismo, DIDEL, Fiscalización", "11100000000"], ["5-2-1", "A4", "Fiscalización de malas prácticas", "NOR", "Turismo, DIDEL, Fiscalización", "11111111111"], ["5-2-2", "A1", "Diseño del ciclo de capacitaciones", "EST", "Turismo, DIDEL", "00011100000"], ["5-2-2", "A2", "Capacitación presencial y en terreno", "PRG", "Turismo, DIDEL", "00011111100"], ["5-2-2", "A3", "Ruta formativa progresiva certificable", "PRG", "Turismo, DIDEL", "00011111100"], ["5-3-1", "A1", "Registro oficial de emprendimiento barrial", "GES", "DIDEL, Turismo", "11100000000"], ["5-3-1", "A2", "Integración a circuitos", "GES", "DIDEL, Turismo", "11111100000"], ["5-3-2", "A1", "Mentoría turística barrial", "PRG", "DIDEL", "00011100000"], ["5-3-2", "A2", "Articulación de certificación y digitalización", "GES", "DIDEL", "00011111111"], ["5-3-2", "A3", "Línea de microfinanciamiento y subsidios", "PRG", "DIDEL", "00011111100"], ["5-4-1", "A1", "Guías barriales multilingües certificados", "PRG", "Turismo, DIDEL, Cultura y Patrimonio", "00011111100"], ["5-4-1", "A2", "Transferencia tecnológica a comercio y hostales", "PRG", "Turismo, DIDEL, Cultura y Patrimonio", "00011100000"], ["5-4-1", "A3", "Becas para artesanos, músicos y creadores", "PRG", "Turismo, DIDEL, Cultura y Patrimonio", "00011111111"]];
+
+(function(){
+const YEARS=[2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036];
+const HZ={c:[0,1,2],i:[3,4,5],l:[6,7,8,9,10]};
+const NATN={EST:"Estudio",INV:"Proyecto de inversión",PRG:"Programa",NOR:"Instrumento normativo",GES:"Instrumento de gestión"};
+const PRION={D:"Detonante",P:"Priorizada",A:"Alta"};
+const FN={H:"Habilitante",F:"Profundización",C:"Continuidad",O:"Oportunidad"};
+const SEC={NP:"Norponiente",NO:"Nororiente",CP:"Centro Poniente",CO:"Centro Oriente",SP:"Surponiente",SO:"Suroriente"};
+const lc=n=>`var(--le${n})`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function sectorsOf(emp){
+  const e=emp.toLowerCase();
+  if(e.includes("toda la comuna")) return Object.keys(SEC);
+  if(e.includes("centro histórico")) return ["NO","NP"];
+  const s=new Set();
+  e.split(/[–-]/).map(x=>x.trim()).forEach(p=>{
+    if(p==="norponiente")s.add("NP"); else if(p==="nororiente")s.add("NO");
+    else if(p==="centro poniente")s.add("CP"); else if(p==="centro oriente")s.add("CO");
+    else if(p==="surponiente")s.add("SP"); else if(p==="suroriente")s.add("SO");
+    else if(p==="poniente"){s.add("NP");s.add("CP");s.add("SP");}
+    else if(p==="sur"){s.add("SP");s.add("SO");}
+  });
+  return [...s];
+}
+// merge programación
+CORE.forEach(c=>{
+  c.id=`${c.le}-${c.n}`; c.code=`LE${c.le} · ${c.n}`;
+  const rows=PROG.filter(r=>r[0]===c.id);
+  c.actions=c.acts.map((txt,i)=>{
+    const r=rows.find(x=>x[1]==="A"+(i+1));
+    return {k:"A"+(i+1),txt,desc:r?r[2]:txt,tipo:r?r[3]:c.nat[0],years:r?r[5].split("").map(Number):Array(11).fill(0)};
+  });
+  c.span=YEARS.map((_,i)=>c.actions.some(a=>a.years[i])?1:0);
+  c.sec=sectorsOf(c.emp);
+  c.compName=LINES[c.le-1].comps.find(x=>x.c===c.c).name;
+  c.hay=[c.code,c.t,c.obj,c.resp,c.emp,...c.acts,...c.actions.map(a=>a.desc)].join(" ").toLowerCase();
+});
+const byId=Object.fromEntries(CORE.map(c=>[c.id,c]));
+
+const st={q:"",lines:new Set(),prio:"",nat:"",sec:"",hz:"",color:"line",cl:new Set(),fn:new Set()};
+function load(){try{const t=localStorage.getItem("pladetur-tab");if(t)showTab(t,true);}catch(e){}}
+
+function match(c){
+  if(st.lines.size&&!st.lines.has(c.le))return false;
+  if(st.prio&&c.p!==st.prio)return false;
+  if(st.nat&&!c.nat.includes(st.nat))return false;
+  if(st.sec&&!c.sec.includes(st.sec))return false;
+  if(st.hz&&!HZ[st.hz].some(i=>c.span[i]))return false;
+  if(st.q&&!st.q.split(/\s+/).every(w=>c.hay.includes(w)))return false;
+  return true;
+}
+function strip(arr,le){return `<span class="strip" style="--lc:${lc(le)}" aria-hidden="true">${arr.map(v=>`<i class="${v?"on":""}"></i>`).join("")}</span>`}
+function natChips(nats){return nats.map(n=>`<span class="nat" style="--n-x:var(--n-${n})" title="${NATN[n]}">${n}</span>`).join("")}
+function spanLabel(s){const f=s.indexOf(1),l=s.lastIndexOf(1);return f<0?"":`${YEARS[f]}–${YEARS[l]}`}
+
+// line chips
+const lineChips=document.getElementById("lineChips");
+lineChips.innerHTML=LINES.map(L=>`<button class="chip" data-le="${L.n}" aria-pressed="false"><span class="dot" style="background:${lc(L.n)}"></span>LE${L.n} ${esc(L.name)}</button>`).join("");
+lineChips.addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const n=+b.dataset.le;st.lines.has(n)?st.lines.delete(n):st.lines.add(n);b.setAttribute("aria-pressed",st.lines.has(n));render();});
+const bind=(id,k)=>document.getElementById(id).addEventListener("input",e=>{st[k]=e.target.value;render();});
+bind("fPrio","prio");bind("fNat","nat");bind("fSec","sec");bind("fHz","hz");
+document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value.trim().toLowerCase();render();});
+document.getElementById("reset").addEventListener("click",()=>{
+  st.q="";st.lines.clear();st.prio=st.nat=st.sec=st.hz="";
+  ["q","fPrio","fNat","fSec","fHz"].forEach(id=>document.getElementById(id).value="");
+  lineChips.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed","false"));render();});
+
+function renderStructure(list){
+  const el=document.getElementById("estructura");
+  if(!list.length){el.innerHTML=`<div class="empty">Ninguna iniciativa coincide con los filtros. Prueba quitando alguno.</div>`;return;}
+  el.innerHTML=LINES.map(L=>{
+    const li=list.filter(c=>c.le===L.n); if(!li.length)return "";
+    return `<div class="lineblk" style="--lc:${lc(L.n)}">
+      <div class="linehead"><div class="lecode" style="color:${lc(L.n)}">LE${L.n}</div><div><h2>${esc(L.name)}</h2><p>“${esc(L.q)}”</p></div></div>
+      ${L.comps.map(C=>{const ci=li.filter(c=>c.c===C.c); if(!ci.length)return "";
+        return `<div class="comp"><div class="comphead"><span class="mono" style="color:var(--muted)">C${C.c}</span><h3>${esc(C.name)}</h3>
+          <details><summary>Objetivo general</summary><p>${esc(C.obj)}</p></details></div>
+          <div class="grid">${ci.map(card).join("")}</div></div>`}).join("")}
+    </div>`}).join("");
+}
+function card(c){
+  return `<button class="card" data-id="${c.id}" style="--lc:${lc(c.le)}">
+    <div class="top"><span class="mono">${c.code}</span><span class="prio ${c.p}">${PRION[c.p]}</span></div>
+    <h4>${esc(c.t)}</h4>
+    <div class="meta"><span class="nats">${natChips(c.nat)}</span>${strip(c.span,c.le)}</div>
+    <div class="meta"><span>${c.actions.length} acciones · ${spanLabel(c.span)}</span><span>${esc(c.emp)}</span></div>
+  </button>`;
+}
+document.getElementById("estructura").addEventListener("click",e=>{const b=e.target.closest(".card");if(b)openDrawer(b.dataset.id,b);});
+
+// drawer
+const drawer=document.getElementById("drawer"),scrim=document.getElementById("scrim");let lastFocus=null;
+function openDrawer(id,from){
+  const c=byId[id]; if(!c)return; lastFocus=from||document.activeElement;
+  const L=LINES[c.le-1];
+  const linked=COMP.filter(x=>x.link.includes(c.id));
+  drawer.style.setProperty("--lc",lc(c.le));
+  drawer.innerHTML=`<div class="dhead"><div class="row"><span class="mono">${c.code} · LE${c.le} ${esc(L.name)}</span><button class="close" id="dClose" aria-label="Cerrar">×</button></div>
+    <h3 id="dTitle">${esc(c.t)}</h3>
+    <div class="sub">C${c.c} · ${esc(c.compName)}</div>
+    <div class="row" style="justify-content:flex-start;margin-top:10px;flex-wrap:wrap"><span class="prio ${c.p}">${PRION[c.p]}</span><span class="nats">${natChips(c.nat)}</span></div></div>
+  <div class="dbody">
+    <div class="dsec"><h5>Objetivo específico</h5><p class="obj">${esc(c.obj)}</p></div>
+    <div class="dsec"><h5>Acciones y programación</h5>
+      <div class="act"><span></span><div class="yrlab">${YEARS.map(y=>`<span>${String(y).slice(2)}</span>`).join("")}</div></div>
+      <div class="acts">${c.actions.map(a=>`<div class="act"><span class="n">${a.k}</span><span class="txt">${esc(a.txt)}</span>
+        <div class="yr"><span class="yrs" aria-label="${spanLabel(a.years)}">${a.years.map(v=>`<i class="${v?"on":""}"></i>`).join("")}</span><span class="nat" style="--n-x:var(--n-${a.tipo})" title="${NATN[a.tipo]||""}">${a.tipo}</span><span class="mono" style="color:var(--muted)">${spanLabel(a.years)}</span></div></div>`).join("")}</div></div>
+    <div class="dsec"><h5>Ficha</h5><dl class="kv">
+      <dt>Naturaleza</dt><dd>${c.nat.map(n=>`${n} · ${NATN[n]}`).join("<br>")}</dd>
+      <dt>Emplazamiento</dt><dd>${esc(c.emp)}</dd>
+      <dt>Responsable</dt><dd>${esc(c.resp)}</dd></dl></div>
+    <div class="dsec"><h5>Indicadores</h5>
+      <div class="ind"><b>Producto</b>${esc(c.ip)}</div><div class="ind"><b>Resultado</b>${esc(c.ir)}</div></div>
+    ${linked.length?`<div class="dsec"><h5>Iniciativas complementarias vinculadas</h5><div class="links">${linked.map(x=>`<button class="lnk" data-cid="${x.id}"><span class="mono">${x.id}</span><span>${esc(x.t)} <span style="color:var(--muted)">· ${FN[x.f]}</span></span></button>`).join("")}</div></div>`:""}
+  </div>`;
+  drawer.hidden=false;scrim.hidden=false;document.body.style.overflow="hidden";
+  document.getElementById("dClose").focus();
+}
+function closeDrawer(){drawer.hidden=true;scrim.hidden=true;document.body.style.overflow="";if(lastFocus&&document.body.contains(lastFocus))lastFocus.focus();}
+drawer.addEventListener("click",e=>{
+  if(e.target.closest("#dClose"))closeDrawer();
+  const l=e.target.closest(".lnk"); if(l){closeDrawer();showTab("complementarias");const card=document.getElementById("cc-"+l.dataset.cid);if(card){card.scrollIntoView({block:"center"});card.animate([{outline:"3px solid var(--band)"},{outline:"3px solid transparent"}],{duration:1600});}}
+});
+scrim.addEventListener("click",closeDrawer);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!drawer.hidden)closeDrawer();});
+
+// gantt + bars
+const tip=document.getElementById("tip");
+function showTip(e,html){tip.innerHTML=html;tip.hidden=false;const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;tip.style.left=x+"px";tip.style.top=y+"px";}
+function hideTip(){tip.hidden=true;}
+
+function renderBars(list){
+  const counts=YEARS.map((_,i)=>LINES.map(L=>list.filter(c=>c.le===L.n).reduce((s,c)=>s+c.actions.filter(a=>a.years[i]).length,0)));
+  const tot=counts.map(r=>r.reduce((a,b)=>a+b,0));
+  const max=Math.max(4,...tot);const step=max>40?20:max>16?10:5;const top=Math.ceil(max/step)*step;
+  const W=900,H=220,pl=34,pr=8,pt=14,pb=26,iw=W-pl-pr,ih=H-pt-pb,bw=iw/11,gap=bw*.28;
+  const y=v=>pt+ih-(v/top)*ih;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Número de acciones en ejecución por año">`;
+  for(let v=0;v<=top;v+=step){s+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--f-mono)">${v}</text>`;}
+  // horizon bands labels
+  [["Corto plazo",0,3],["Intermedio",3,6],["Largo plazo",6,11]].forEach(([t,a,b],k)=>{s+=`<text x="${pl+bw*a+2}" y="${pt-3}" font-size="10" fill="var(--muted)" font-weight="700" letter-spacing=".6">${t.toUpperCase()}</text>`; if(k)s+=`<line x1="${pl+bw*a}" x2="${pl+bw*a}" y1="${pt}" y2="${pt+ih}" stroke="var(--line2)" stroke-dasharray="3 3"/>`;});
+  YEARS.forEach((yr,i)=>{
+    const x=pl+bw*i+gap/2,w=bw-gap;let acc=0;
+    LINES.forEach((L,k)=>{const v=counts[i][k];if(!v)return;const y0=y(acc),y1=y(acc+v);const hgt=y0-y1-(acc>0?2:0);
+      s+=`<rect x="${x}" y="${y1}" width="${w}" height="${Math.max(hgt,1)}" rx="${acc+v===tot[i]?3:0}" fill="${lc(L.n)}"/>`;acc+=v;});
+    s+=`<text x="${x+w/2}" y="${y(tot[i])-5}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--fg)" font-family="var(--f-mono)">${tot[i]}</text>`;
+    s+=`<text x="${x+w/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--fg2)" font-family="var(--f-mono)">${yr}</text>`;
+    s+=`<rect class="hit" data-i="${i}" x="${pl+bw*i}" y="${pt}" width="${bw}" height="${ih}" fill="transparent"/>`;
+  });
+  s+=`</svg>`;
+  const el=document.getElementById("bars");el.innerHTML=s;
+  el.querySelectorAll(".hit").forEach(r=>{r.addEventListener("mousemove",e=>{const i=+r.dataset.i;showTip(e,`<b>${YEARS[i]} · ${tot[i]} acciones</b>${LINES.map((L,k)=>counts[i][k]?`LE${L.n} ${esc(L.name)}: ${counts[i][k]}`:"").filter(Boolean).join("<br>")}`);});r.addEventListener("mouseleave",hideTip);});
+  document.getElementById("barsLegend").innerHTML=LINES.map(L=>`<span><i class="sw" style="background:${lc(L.n)}"></i>LE${L.n} ${esc(L.name)}</span>`).join("");
+  const peak=tot.indexOf(Math.max(...tot));
+  document.getElementById("barsNote").textContent=list.length?`La carga máxima se concentra en ${YEARS[peak]}, con ${tot[peak]} acciones en ejecución simultánea. Suma de acciones activas cada año según la programación del plan.`:"Sin datos para los filtros actuales.";
+}
+function renderGantt(list){
+  const byNat=st.color==="nat";
+  document.getElementById("ganttLegend").innerHTML=byNat?Object.keys(NATN).map(n=>`<span><i class="sw" style="background:var(--n-${n});outline:1px solid var(--line2)"></i>${n} · ${NATN[n]}</span>`).join(""):"";
+  let h=`<thead><tr class="hz"><th class="lab"></th><th colspan="3" class="h1">Corto plazo</th><th colspan="3">Intermedio</th><th colspan="5" class="h1">Largo plazo</th></tr><tr><th class="lab" style="padding:6px 12px">Iniciativa / acción</th>${YEARS.map(y=>`<th class="yh">${y}</th>`).join("")}</tr></thead><tbody>`;
+  list.forEach(c=>{
+    h+=`<tr class="ini" data-id="${c.id}" style="cursor:pointer"><td class="lab"><span class="mono">${c.code}</span>${esc(c.t)}</td>${c.span.map(v=>`<td class="y"><div class="${v?"on":""}" style="--cc:${lc(c.le)};opacity:.35"></div></td>`).join("")}</tr>`;
+    c.actions.forEach(a=>{
+      const cc=byNat?`var(--n-${a.tipo})`:lc(c.le);
+      h+=`<tr class="arow"><td class="lab"><span class="mono">${a.k}</span>${esc(a.desc)}<span class="t" style="--n-x:var(--n-${a.tipo})">${a.tipo}</span></td>${a.years.map((v,i)=>`<td class="y" data-id="${c.id}" data-a="${a.k}" data-i="${i}"><div class="${v?"on":""}" style="--cc:${cc}${byNat&&v?";outline:1px solid var(--line2)":""}"></div></td>`).join("")}</tr>`;
+    });
+  });
+  if(!list.length)h+=`<tr><td class="lab" colspan="12" style="position:static;max-width:none;padding:30px;text-align:center;color:var(--muted)">Ninguna iniciativa coincide con los filtros.</td></tr>`;
+  document.getElementById("gantt").innerHTML=h+"</tbody>";
+}
+const gantt=document.getElementById("gantt");
+gantt.addEventListener("mousemove",e=>{const td=e.target.closest("td.y[data-a]");if(!td){hideTip();return;}const c=byId[td.dataset.id],a=c.actions.find(x=>x.k===td.dataset.a),i=+td.dataset.i;
+  showTip(e,`<b>${c.code} ${a.k} · ${YEARS[i]}</b>${esc(a.desc)}<br>${a.years[i]?"En ejecución":"Sin actividad este año"} · ${a.tipo} ${NATN[a.tipo]||""}<br>${esc(c.resp)}`);});
+gantt.addEventListener("mouseleave",hideTip);
+gantt.addEventListener("click",e=>{const tr=e.target.closest("tr.ini");if(tr)openDrawer(tr.dataset.id,tr);});
+const cLine=document.getElementById("cLine"),cNat=document.getElementById("cNat");
+cLine.onclick=()=>{st.color="line";cLine.setAttribute("aria-pressed","true");cNat.setAttribute("aria-pressed","false");render();};
+cNat.onclick=()=>{st.color="nat";cNat.setAttribute("aria-pressed","true");cLine.setAttribute("aria-pressed","false");render();};
+
+// complementarias
+const cLC=document.getElementById("cLineChips"),fnC=document.getElementById("fnChips");
+cLC.innerHTML=LINES.map(L=>`<button class="chip" data-le="${L.n}" aria-pressed="false"><span class="dot" style="background:${lc(L.n)}"></span>LE${L.n}</button>`).join("");
+fnC.innerHTML=Object.entries(FN).map(([k,v])=>`<button class="chip" data-fn="${k}" aria-pressed="false">${v}</button>`).join("");
+cLC.addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const n=+b.dataset.le;st.cl.has(n)?st.cl.delete(n):st.cl.add(n);b.setAttribute("aria-pressed",st.cl.has(n));renderComp();});
+fnC.addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const n=b.dataset.fn;st.fn.has(n)?st.fn.delete(n):st.fn.add(n);b.setAttribute("aria-pressed",st.fn.has(n));renderComp();});
+function renderComp(){
+  const list=COMP.filter(x=>(!st.cl.size||st.cl.has(x.le))&&(!st.fn.size||st.fn.has(x.f)));
+  document.getElementById("ccount").innerHTML=`<b>${list.length}</b> de 36 iniciativas complementarias`;
+  document.getElementById("cgrid").innerHTML=list.map(x=>`<article class="ccard" id="cc-${x.id}" style="border-top:4px solid ${lc(x.le)}">
+    <div class="top"><span class="mono">${x.id}</span><span class="nat" style="--n-x:var(--n-${x.nat})" title="${NATN[x.nat]}">${x.nat}</span><span class="fn ${x.f}">${FN[x.f]}</span></div>
+    <h4>${esc(x.t)}</h4><p>${esc(x.obj)}</p>
+    <details><summary>${x.acts.length} ${x.acts.length>1?"acciones":"acción"}</summary><ol>${x.acts.map(a=>`<li>${esc(a)}</li>`).join("")}</ol></details>
+    <div class="v">Se vincula con ${x.link.map(id=>`<button data-id="${id}">${byId[id].code} ${esc(byId[id].t)}</button>`).join(" y ")}. ${esc(x.v)}</div>
+  </article>`).join("")||`<div class="empty">Ninguna iniciativa coincide.</div>`;
+}
+document.getElementById("cgrid").addEventListener("click",e=>{const b=e.target.closest(".v button");if(b)openDrawer(b.dataset.id,b);});
+
+// visions
+document.getElementById("visions").innerHTML=LINES.map(L=>`<div class="visi" style="--lc:${lc(L.n)}"><div class="eyebrow" style="color:${lc(L.n)}">LE${L.n} · ${esc(L.name)}</div><div class="q">“${esc(L.q)}”</div><p>${esc(L.vision)}</p></div>`).join("");
+
+// tabs
+function showTab(t,silent){
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
+  ["estructura","cronograma","complementarias","ruta"].forEach(s=>document.getElementById(s).hidden=s!==t);
+  document.getElementById("filterbar").hidden=!(t==="estructura"||t==="cronograma");
+  try{localStorage.setItem("pladetur-tab",t);}catch(e){}
+  if(!silent)window.scrollTo({top:document.querySelector(".tabs").offsetTop,behavior:"smooth"});
+}
+document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(b)showTab(b.dataset.tab);});
+
+function render(){
+  const list=CORE.filter(match);
+  const nA=list.reduce((s,c)=>s+c.actions.length,0);
+  document.getElementById("count").innerHTML=`<b>${list.length}</b> de 40 iniciativas · <b>${nA}</b> acciones`;
+  renderStructure(list);renderBars(list);renderGantt(list);
+}
+render();renderComp();load();
+})();
+</script>
+
+</body>
+</html>
