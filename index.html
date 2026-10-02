@@ -47,6 +47,10 @@ button{font:inherit;color:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .mast{background:var(--band);color:var(--band-ink)}
 .bannerwrap{background:linear-gradient(var(--cream) 0 50%,var(--band) 50% 100%)}
+.bannerlink{display:block}
+.bannerlink:hover .banner{filter:brightness(1.04)}
+.sitelink{display:inline-flex;margin-top:12px;font-size:.82rem;font-weight:700;color:var(--band-ink);text-decoration:none;border:1px solid rgba(243,235,220,.35);border-radius:999px;padding:5px 12px}
+.sitelink:hover{background:rgba(243,235,220,.12)}
 .banner{display:block;width:100%;max-width:1600px;margin:0 auto;aspect-ratio:4/1;object-fit:cover}
 .mast .wrap{padding-block:22px 20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px 34px;align-items:start}
 .mast .eyebrow{color:var(--band-ink);opacity:.72}
@@ -266,7 +270,8 @@ section[hidden]{display:none}
 .stk .bar i.m{color:var(--fg)}
 .stk .val{font-family:var(--f-mono);font-size:.76rem;text-align:right}
 .tblwrap{overflow-x:auto}
-table.heat{border-collapse:separate;border-spacing:2px;font-size:.82rem;min-width:560px;width:100%}
+table.heat{border-collapse:separate;border-spacing:2px;font-size:.82rem;min-width:560px;width:100%;table-layout:fixed}
+table.heat col.c{width:20%}
 table.heat th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--fg2);padding:4px 8px;text-align:center}
 table.heat th.l{text-align:left}
 table.heat td{padding:5px 8px;text-align:center;font-family:var(--f-mono);font-variant-numeric:tabular-nums;border-radius:3px}
@@ -334,11 +339,12 @@ table.heat tr.eje td{font-family:var(--f-display);font-weight:800;text-align:lef
 
 <header class="mast">
   <h1 class="sr">PLADETUR Santiago 2026–2036</h1>
-  <div class="bannerwrap"><img class="banner" id="bannerImg" alt="PLADETUR, Plan de Turismo Santiago"></div>
+  <div class="bannerwrap"><a class="bannerlink" href="https://www.munistgo.cl/pladetur/" target="_blank" rel="noopener" title="Ir al sitio oficial del PLADETUR en munistgo.cl"><img class="banner" id="bannerImg" alt="PLADETUR, Plan de Turismo Santiago. Ir al sitio oficial en munistgo.cl"></a></div>
   <div class="wrap">
     <div>
       <div class="eyebrow">Ilustre Municipalidad de Santiago</div>
       <div class="sub">Plan Estratégico de Desarrollo Turístico 2026–2036</div>
+      <a class="sitelink" href="https://www.munistgo.cl/pladetur/" target="_blank" rel="noopener">Sitio oficial · munistgo.cl/pladetur ↗</a>
     </div>
     <div class="vision"><b>Nuestra visión</b>Visitar la comuna de Santiago es llegar al corazón de la capital de Chile. En 2036, su patrimonio histórico y arquitectónico convive con una escena gastronómica, artística y cultural que se renueva constantemente. Un lugar seguro, conectado y acogedor, activo durante todo el año, donde el turismo sostenible e inclusivo genera desarrollo local y fortalece el vínculo entre visitantes y residentes.</div>
     <div class="kpis">
@@ -1392,7 +1398,7 @@ const TA=[["Entorno habilitante",[["Seguridad turística",18,28,24],["Patrimonio
 ["Gobernanza e inteligencia",[["Turismo municipal",12,14,13],["Corporación público-privada",9,13,17],["Distinción SERNATUR",1,6,12],["Ordenanzas turísticas",15,20,19],["Participación gremial y vecinal",7,22,11],["Gestión de datos",0,7,10]]],
 ["Experiencias turísticas",[["Patrimonio guiado",7,16,24],["Gastronomía local",12,6,13],["Cultura viva",15,22,18],["Santiago de noche",1,17,5],["Naturaleza urbana",4,12,6],["Experiencias en barrios",5,8,17]]]];
 const hmax=28;
-document.getElementById("heat").innerHTML=`<thead><tr><th class="l">Línea de acción</th><th>Sur</th><th>Poniente</th><th>Oriente</th></tr></thead><tbody>`+TA.map(([eje,rows])=>`<tr class="eje"><td colspan="4">${eje}</td></tr>`+rows.map(r=>`<tr><td class="l">${r[0]}</td>${r.slice(1).map(v=>{const p=Math.round(v/hmax*85);return `<td style="background:color-mix(in srgb,var(--bar) ${p}%,var(--cell-off));color:${p>48?"#fff":"var(--fg)"}" title="${r[0]}: ${v} puntos">${v}</td>`}).join("")}</tr>`).join("")).join("")+`</tbody>`;
+document.getElementById("heat").innerHTML=`<colgroup><col><col class="c"><col class="c"><col class="c"></colgroup><thead><tr><th class="l">Línea de acción</th><th>Sur</th><th>Poniente</th><th>Oriente</th></tr></thead><tbody>`+TA.map(([eje,rows])=>`<tr class="eje"><td colspan="4">${eje}</td></tr>`+rows.map(r=>`<tr><td class="l">${r[0]}</td>${r.slice(1).map(v=>{const p=Math.round(v/hmax*85);return `<td style="background:color-mix(in srgb,var(--bar) ${p}%,var(--cell-off));color:${p>48?"#fff":"var(--fg)"}" title="${r[0]}: ${v} puntos">${v}</td>`}).join("")}</tr>`).join("")).join("")+`</tbody>`;
 
 // FODA barrial
 const FB=[["NO","Nororiente","Destino consolidado bajo presión de saturación","Principal polo turístico de la comuna, con una concentración excepcional de patrimonio urbano, institucional y cívico. La intensidad de uso, el comercio informal, el deterioro del mobiliario y la inseguridad percibida reducen la permanencia: opera más como espacio de llegada y tránsito que de estadía.","Mejorar la experiencia de visita con seguridad preventiva, gestión del espacio público, mantenimiento, señalética e integración con circuitos que redistribuyan flujos hacia otros barrios."],
